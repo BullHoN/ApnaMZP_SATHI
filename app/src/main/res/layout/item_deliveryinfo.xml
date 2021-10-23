@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:weightSum="1"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/message"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/primaryColor"
+            android:text="Less Than Equal to 2KM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/primaryColor">
+
+            <TextView
+                android:id="@+id/value"
+                android:textColor="@color/white"
+                android:fontFamily="@font/roboto_bold"
+                android:text="$20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
