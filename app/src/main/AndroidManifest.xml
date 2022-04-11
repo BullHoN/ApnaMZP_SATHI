@@ -3,6 +3,7 @@
     package="com.avit.apnamzpsathi">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -10,8 +11,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.ApnaMzpSathi">
+        android:theme="@style/Theme.ApnaMzpSathi"
+        android:usesCleartextTraffic="true">
+        <service
+            android:name=".services.LocationUpdatesService"
+            android:enabled="false"
+            android:exported="false"></service>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -21,6 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
