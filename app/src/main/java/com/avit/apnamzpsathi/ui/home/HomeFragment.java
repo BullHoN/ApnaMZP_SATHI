@@ -2,7 +2,9 @@ package com.avit.apnamzpsathi.ui.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -25,6 +27,8 @@ import com.avit.apnamzpsathi.model.DeliveryInfoData;
 import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
+import com.avit.apnamzpsathi.services.LocationBroadCastReceiver;
+import com.avit.apnamzpsathi.services.LocationUpdatesService;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -63,6 +67,7 @@ public class HomeFragment extends Fragment {
     private String TAG = "HomeFragment";
     private int locationUpdatePeriod = 1000 * 60 * 2;
     private DeliverySathi deliverySathi;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,7 +112,7 @@ public class HomeFragment extends Fragment {
         // TODO: Change Status
 
         // TODO: lOCATION UPDATES
-        getTheLocationPermission();
+//        getTheLocationPermission();
 
         return binding.getRoot();
     }
@@ -130,29 +135,38 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private PendingIntent getPendingIntent() {
+        Intent intent = new Intent(getContext(), LocationBroadCastReceiver.class);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        intent.setAction(LocationBroadCastReceiver.ACTION_PROCESS_UPDATES);
+        return PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     @SuppressLint("MissingPermission")
     private void getLocationUpdates(){
-        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(locationUpdatePeriod);
         locationRequest.setFastestInterval(locationUpdatePeriod);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest,new LocationCallback(){
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                if(locationResult == null){
-                    return;
-                }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,getPendingIntent());
 
-                Location location =  locationResult.getLocations().get(0);
-
-                // SAVE THE Location
-                Log.i(TAG, "onLocationResult: " + location.toString());
-                sendLocationUpdates();
-            }
-        }, Looper.getMainLooper());
+//        fusedLocationProviderClient.requestLocationUpdates(locationRequest,new LocationCallback(){
+//            @Override
+//            public void onLocationResult(LocationResult locationResult) {
+//                super.onLocationResult(locationResult);
+//                if(locationResult == null){
+//                    return;
+//                }
+//
+//                Location location =  locationResult.getLocations().get(0);
+//
+//                // SAVE THE Location
+//                Log.i(TAG, "onLocationResult: " + location.toString());
+//                sendLocationUpdates();
+//            }
+//        }, Looper.getMainLooper());
 
     }
 
@@ -201,6 +215,7 @@ public class HomeFragment extends Fragment {
                     case LocationSettingsStatusCodes.SUCCESS:
 //                        getAndSetFusedLocation();
                         getLocationUpdates();
+//                        getActivity().startService(new Intent(getContext().getApplicationContext(), LocationUpdatesService.class));
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
@@ -211,6 +226,7 @@ public class HomeFragment extends Fragment {
                             status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
 //                            getAndSetFusedLocation();
                             getLocationUpdates();
+//                            getActivity().startService(new Intent(getContext().getApplicationContext(), LocationUpdatesService.class));
                         } catch (IntentSender.SendIntentException e) {
                             Log.i(TAG, "PendingIntent unable to execute request.");
                         }
@@ -223,4 +239,10 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i("LocationUpdatesService", "onDestroy: ");
+        fusedLocationProviderClient.removeLocationUpdates(getPendingIntent());
+    }
 }
