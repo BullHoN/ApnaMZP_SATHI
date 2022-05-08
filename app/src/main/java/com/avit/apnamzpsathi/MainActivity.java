@@ -1,7 +1,9 @@
 package com.avit.apnamzpsathi;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -9,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -44,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = "LocationUpdatesService";
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private int locationUpdatePeriod = 1000 * 60 * 1;
+    private int locationUpdatePeriod = 1000 * 60 * 2;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private Intent backgroundLocationUpdatesService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getTheLocationPermission(){
+        Log.i(TAG, "getTheLocationPermission: ");
         Dexter.withContext(getApplicationContext())
                 .withPermissions(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                 .withListener(new MultiplePermissionsListener() {
@@ -114,7 +119,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if(multiplePermissionsReport.areAllPermissionsGranted()){
                             displayLocationSettingsRequest(getApplicationContext());
+                            Log.i(TAG, "onPermissionsChecked: ");
                         }
+
                     }
 
                     @Override
@@ -140,14 +147,17 @@ public class MainActivity extends AppCompatActivity {
 
         PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResult(LocationSettingsResult result) {
                 final Status status = result.getStatus();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
 //                        getAndSetFusedLocation();
-                        getLocationUpdates();
+//                        getLocationUpdates();
 //                        getActivity().startService(new Intent(getContext().getApplicationContext(), LocationUpdatesService.class));
+//                        startService(new Intent(getApplicationContext(), LocationUpdatesService.class));
+                        startService();
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
@@ -157,8 +167,10 @@ public class MainActivity extends AppCompatActivity {
                             // in onActivityResult().
                             status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
 //                            getAndSetFusedLocation();
-                            getLocationUpdates();
-//                            getActivity().startService(new Intent(getContext().getApplicationContext(), LocationUpdatesService.class));
+//                            getLocationUpdates();
+//                            startForegroundService(new Intent(getApplicationContext(),LocationUpdatesService.class)
+//                            startService(new Intent(getApplicationContext(), LocationUpdatesService.class));
+                            startService();
                         } catch (IntentSender.SendIntentException e) {
                             Log.i(TAG, "PendingIntent unable to execute request.");
                         }
@@ -171,9 +183,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void startService(){
+        backgroundLocationUpdatesService = new Intent(getApplicationContext(),LocationUpdatesService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ContextCompat.startForegroundService(getApplicationContext(),backgroundLocationUpdatesService);
+        } else {
+            startService(backgroundLocationUpdatesService);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: ");
+        stopService(backgroundLocationUpdatesService);
     }
 }

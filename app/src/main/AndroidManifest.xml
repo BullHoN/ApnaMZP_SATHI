@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -26,6 +27,8 @@
 
         </service>
         <service
+            android:enabled="true"
+            android:exported="true"
             android:name=".services.LocationUpdatesService" />
 
         <activity
@@ -41,6 +44,14 @@
         <receiver android:name=".services.LocationBroadCastReceiver">
             <intent-filter>
                 <action android:name="com.google.android.gms.location.sample.locationupdatespendingintent.LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.RestartBackgroundService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="restart_location_updates_service" />
             </intent-filter>
         </receiver>
 
