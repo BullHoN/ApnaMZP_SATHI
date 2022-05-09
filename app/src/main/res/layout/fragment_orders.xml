@@ -3,14 +3,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     tools:context=".ui.orders.OrdersFragment">
 
     <RelativeLayout
+        android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
+            <TextView
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/primaryColor"
+                android:textSize="24sp"
+                android:text="Deliveries"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_marginTop="5dp"
+                android:background="@color/secondaryColor"
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
+        </LinearLayout>
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/header"
+            android:id="@+id/delivery_filter"
+            app:singleLine="true"
+            app:singleSelection="true"
+            app:chipSpacingHorizontal="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/new_orders"
+                android:text="New Orders"
+                style="@style/My_Widget.MaterialComponents.Chip.Choice"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.chip.Chip
+                android:text="Out For Delivery"
+                style="@style/My_Widget.MaterialComponents.Chip.Choice"
+                android:id="@+id/out_for_delivery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/orders_list"
+            android:layout_below="@id/delivery_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_order" />
 
     </RelativeLayout>
 

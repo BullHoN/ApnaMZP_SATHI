@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        getTheLocationPermission();
+//        getTheLocationPermission();
 
     }
 
@@ -196,6 +196,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: ");
-        stopService(backgroundLocationUpdatesService);
+//        stopService(backgroundLocationUpdatesService);
     }
 }
