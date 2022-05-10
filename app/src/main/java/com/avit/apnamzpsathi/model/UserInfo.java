@@ -6,6 +6,7 @@ public class UserInfo {
     private String longitude;
     private String phoneNo;
     private String rawAddress;
+    private boolean isVissible;
 
     public UserInfo(String name, String latitude, String longitude, String phoneNo, String rawAddress) {
         this.name = name;
@@ -13,6 +14,15 @@ public class UserInfo {
         this.longitude = longitude;
         this.phoneNo = phoneNo;
         this.rawAddress = rawAddress;
+        this.isVissible = false;
+    }
+
+    public boolean isVissible() {
+        return isVissible;
+    }
+
+    public void setVissible(boolean vissible) {
+        isVissible = vissible;
     }
 
     public String getName() {

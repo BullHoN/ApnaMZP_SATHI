@@ -31,11 +31,11 @@ public class OrderFragmentViewModel extends ViewModel {
         return orderItemMutableLiveData;
     }
 
-    public void getOrdersFromServer(Context context, String deliveryBoyId){
+    public void getOrdersFromServer(Context context, String deliveryBoyId,Integer orderStatus){
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
-        Call<List<OrderItem>> call = networkAPI.getOrdersForDeliveryBoy(deliveryBoyId);
+        Call<List<OrderItem>> call = networkAPI.getOrdersForDeliveryBoy(deliveryBoyId,orderStatus);
         call.enqueue(new Callback<List<OrderItem>>() {
             @Override
             public void onResponse(Call<List<OrderItem>> call, Response<List<OrderItem>> response) {

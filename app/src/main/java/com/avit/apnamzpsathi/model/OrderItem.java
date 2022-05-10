@@ -8,12 +8,25 @@ public class OrderItem {
     private List<ShopItemData> orderItems;
     private UserInfo shopInfo;
     private UserInfo userInfo;
+    private Integer orderStatus;
 
     public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo) {
         this._id = _id;
         this.orderItems = orderItems;
         this.shopInfo = shopInfo;
         this.userInfo = userInfo;
+    }
+
+    public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo, Integer orderStatus) {
+        this._id = _id;
+        this.orderItems = orderItems;
+        this.shopInfo = shopInfo;
+        this.userInfo = userInfo;
+        this.orderStatus = orderStatus;
+    }
+
+    public Integer getOrderStatus() {
+        return orderStatus;
     }
 
     public String get_id() {
