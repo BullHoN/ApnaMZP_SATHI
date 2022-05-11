@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 
 import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.databinding.FragmentOrdersBinding;
+import com.avit.apnamzpsathi.db.LocalDB;
+import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.model.OrderItem;
 import com.avit.apnamzpsathi.network.NetworkAPI;
@@ -36,6 +38,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
     private FragmentOrdersBinding binding;
     private OrderFragmentViewModel viewModel;
     private String TAG = "OrdersFragment";
+    private DeliverySathi deliverySathi;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,8 +48,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         viewModel = new ViewModelProvider(this).get(OrderFragmentViewModel.class);
 
 
-        // TODO: Change the data
-        viewModel.getOrdersFromServer(getContext(),"1234567890",4);
+        deliverySathi = LocalDB.getDeliverySathiDetails(getContext());
+
+        viewModel.getOrdersFromServer(getContext(),deliverySathi.getPhoneNo(),4);
 
         binding.ordersList.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
         OrdersAdapter ordersAdapter = new OrdersAdapter(new ArrayList<>(),getContext(),this);
@@ -64,10 +68,10 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
             public void onCheckedChanged(ChipGroup group, int checkedId) {
                 switch (checkedId){
                     case R.id.new_orders:
-                        viewModel.getOrdersFromServer(getContext(),"1234567890",4);
+                        viewModel.getOrdersFromServer(getContext(), deliverySathi.getPhoneNo(), 4);
                         return;
                     case R.id.out_for_delivery:
-                        viewModel.getOrdersFromServer(getContext(),"1234567890",5);
+                        viewModel.getOrdersFromServer(getContext(), deliverySathi.getPhoneNo(), 5);
                         return;
                 }
             }

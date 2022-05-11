@@ -16,20 +16,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ApnaMzpSathi"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".auth.AuthActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".services.NotificationService"
             android:enabled="true"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-
         </service>
         <service
+            android:name=".services.LocationUpdatesService"
             android:enabled="true"
-            android:exported="true"
-            android:name=".services.LocationUpdatesService" />
+            android:exported="true" />
 
         <activity
             android:name=".MainActivity"
@@ -46,8 +54,8 @@
                 <action android:name="com.google.android.gms.location.sample.locationupdatespendingintent.LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".receivers.RestartBackgroundService"
+        <receiver
+            android:name=".receivers.RestartBackgroundService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

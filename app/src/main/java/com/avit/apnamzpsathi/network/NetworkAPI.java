@@ -25,12 +25,18 @@ public interface NetworkAPI {
     Call<List<DeliveryInfoData>> getIncentivePricingInfo();
 
     @POST("/sathi/location/location_update/")
-    Call<ResponseBody> sendLocationUpdates(@Body DeliverySathi deliverySathi);
+    Call<ResponseBody> sendLocationUpdates(@Body DeliverySathi deliverySathi,@Query("action") String action);
 
     @GET("/sathi/orders/{delivery_sathi}")
     Call<List<OrderItem>> getOrdersForDeliveryBoy(@Path("delivery_sathi") String deliverySathi, @Query("order_status") Integer orderStatus);
 
     @POST("/partner/order/updateStatus")
     Call<NetworkResponse> updateOrderStatus(@Query("orderId") String orderId,@Query("orderStatus") Integer orderStatus);
+
+    @GET("/login")
+    Call<ResponseBody> login(@Query("phoneNo") String phoneNo,@Query("password") String password);
+
+    @POST("/user_routes/updateFCM")
+    Call<ResponseBody> updateFcmToken(@Body DeliverySathi deliverySathi,@Query("user_type") String userType);
 
 }

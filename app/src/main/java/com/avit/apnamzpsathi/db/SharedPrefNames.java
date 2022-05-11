@@ -1,6 +1,7 @@
 package com.avit.apnamzpsathi.db;
 
 public class SharedPrefNames {
-    static String SHARED_DB_NAME = "MYMZP_SATHI_DB";
-    static String DELIVERY_BOY_STATUS = "MYMZP_DELIVERY_BOY_STATUS";
+    public static String SHARED_DB_NAME = "APNA_MZP_SATHI_DB";
+    public static String DELIVERY_BOY_STATUS = "APNA_MZP_DELIVERY_BOY_STATUS";
+    public static String DELIVERY_SATHI_DATA = "APNA_MZP_DELIVERY_SATHI_DATA";
 }

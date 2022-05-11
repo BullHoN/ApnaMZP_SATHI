@@ -6,9 +6,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,8 +25,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.avit.apnamzpsathi.MainActivity;
 import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.databinding.FragmentHomeBinding;
+import com.avit.apnamzpsathi.db.SharedPrefNames;
 import com.avit.apnamzpsathi.model.DeliveryInfoData;
 import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.network.NetworkAPI;
@@ -42,10 +48,12 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
@@ -64,7 +72,9 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private HomeViewModel viewModel;
     private String TAG = "HomeFragment";
-    private DeliverySathi deliverySathi;
+    private SharedPreferences sharedPreferences;
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private Intent backgroundLocationUpdatesService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,10 +115,125 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        deliverySathi = new DeliverySathi("7505725957","25.13649844681555","82.56680760096513");
-        // TODO: Change Status
+//        deliverySathi = new DeliverySathi("7505725957","25.13649844681555","82.56680760096513");
+        // Change Status
+
+        sharedPreferences = getActivity().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,Context.MODE_PRIVATE);
+        viewModel.initlializeDeliveryBoyStatus(sharedPreferences);
+
+        viewModel.getDeliveryBoyStatusIsOnlineData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(!aBoolean){
+                    binding.statusText.setText("OFFLINE");
+                    binding.statusText.setTextColor(getResources().getColor(R.color.errorColor));
+                    // TODO: STOP SENDING LOCATION UPDATES
+                    stopService();
+                }
+                else {
+                    binding.statusText.setText("ONLINE");
+                    binding.statusText.setTextColor(getResources().getColor(R.color.successColor));
+                    // TODO: START SENDING LOCATION UPDATES
+                    getTheLocationPermission();
+                }
+            }
+        });
+
+        binding.statusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.toggleDeliveryBoyStatus();
+            }
+        });
 
         return binding.getRoot();
     }
 
+    private void getTheLocationPermission(){
+        Log.i(TAG, "getTheLocationPermission: ");
+        Dexter.withContext(getContext())
+                .withPermissions(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                        if(multiplePermissionsReport.areAllPermissionsGranted()){
+                            displayLocationSettingsRequest(getContext());
+                            Log.i(TAG, "onPermissionsChecked: ");
+                        }
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                        permissionToken.continuePermissionRequest();
+                    }
+                }).check();
+
+    }
+
+    private void displayLocationSettingsRequest(Context context) {
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API).build();
+        googleApiClient.connect();
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(10000 / 2);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        startService();
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+
+                        try {
+                            // Show the dialog by calling startResolutionForResult(), and check the result
+                            // in onActivityResult().
+                            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+
+                            startService();
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.i(TAG, "PendingIntent unable to execute request.");
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                        break;
+                }
+            }
+        });
+    }
+
+    private void startService(){
+        Log.i(TAG, "startService: ");
+        backgroundLocationUpdatesService = new Intent(getContext(),LocationUpdatesService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ContextCompat.startForegroundService(getContext(),backgroundLocationUpdatesService);
+        } else {
+            getActivity().startService(backgroundLocationUpdatesService);
+        }
+    }
+
+    private void stopService(){
+        Log.i(TAG, "stopService: ");
+        if(backgroundLocationUpdatesService != null) getActivity().stopService(backgroundLocationUpdatesService);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: ");
+        stopService();
+    }
 }

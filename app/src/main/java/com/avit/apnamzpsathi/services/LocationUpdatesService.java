@@ -15,6 +15,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import com.avit.apnamzpsathi.db.LocalDB;
 import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
@@ -34,9 +35,10 @@ import retrofit2.Retrofit;
 public class LocationUpdatesService extends Service {
 
     private String TAG = "LocationUpdatesService";
-    private int locationUpdatePeriod = 1000 * 60 * 1;
+    private int locationUpdatePeriod = 1000 * 60 * 2;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
+    private DeliverySathi deliverySathi;
 
     public LocationUpdatesService() {
     }
@@ -47,13 +49,13 @@ public class LocationUpdatesService extends Service {
         if (Build.VERSION.SDK_INT >= 26) {
             String CHANNEL_ID = "my_channel_01";
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    "location updates started",
+                    "location_updates",
                     NotificationManager.IMPORTANCE_DEFAULT);
 
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
 
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle("")
+                    .setContentTitle("Delivery Boy Status Online")
                     .setContentText("").build();
 
             startForeground(1, notification);
@@ -68,13 +70,16 @@ public class LocationUpdatesService extends Service {
         return START_STICKY;
     }
     
-    private void sendLocationUpdates(){
+    private void sendLocationUpdates(String latitude,String longitude){
         Log.i(TAG, "sendLocationUpdates: ");
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
-        DeliverySathi deliverySathi = new DeliverySathi("7505725957","25.13649844681555","82.56680760096513");
-        Call<ResponseBody> call = networkAPI.sendLocationUpdates(deliverySathi);
+        deliverySathi = LocalDB.getDeliverySathiDetails(getApplicationContext());
+        deliverySathi.setLatitude(latitude);
+        deliverySathi.setLongitude(longitude);
+
+        Call<ResponseBody> call = networkAPI.sendLocationUpdates(deliverySathi,null);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -109,7 +114,7 @@ public class LocationUpdatesService extends Service {
 
                 // SAVE THE Location
                 Log.i(TAG, "onLocationResult: " + location.toString());
-                sendLocationUpdates();
+                sendLocationUpdates(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
             }
         };
 
@@ -126,16 +131,31 @@ public class LocationUpdatesService extends Service {
         return null;
     }
 
+    private void removeFromLive(){
+        Retrofit retrofit = RetrofitClient.getInstance();
+        NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
+
+        Call<ResponseBody> call = networkAPI.sendLocationUpdates(deliverySathi,"del");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
+
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: ");
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        removeFromLive();
 
-//        Intent intent = new Intent();
-//        intent.setAction("restart_location_updates_service");
-//        intent.setClass(getApplicationContext(), RestartBackgroundService.class);
-//
-//        sendBroadcast(intent);
     }
 }

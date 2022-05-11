@@ -48,7 +48,7 @@ public class LocationBroadCastReceiver extends BroadcastReceiver {
 
         Log.i(TAG, "sendLocationUpdates: ");
         DeliverySathi deliverySathi = new DeliverySathi("7505725957","25.13649844681555","82.56680760096513");
-        Call<ResponseBody> call = networkAPI.sendLocationUpdates(deliverySathi);
+        Call<ResponseBody> call = networkAPI.sendLocationUpdates(deliverySathi,null);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
