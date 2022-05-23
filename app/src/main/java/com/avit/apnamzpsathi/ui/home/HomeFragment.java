@@ -3,8 +3,10 @@ package com.avit.apnamzpsathi.ui.home;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -169,6 +171,7 @@ public class HomeFragment extends Fragment {
                     }
                 }).check();
 
+
     }
 
     private void displayLocationSettingsRequest(Context context) {
@@ -234,6 +237,6 @@ public class HomeFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: ");
-        stopService();
+//        stopService();
     }
 }

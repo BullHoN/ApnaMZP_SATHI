@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.os.Build;
 import android.os.Bundle;
@@ -55,13 +59,24 @@ import retrofit2.Retrofit;
 public class MainActivity extends AppCompatActivity {
 
     private String TAG = "LocationUpdatesService";
-    private FusedLocationProviderClient fusedLocationProviderClient;
+    private NavController navController;
+    private BroadcastReceiver receiver;
+    private IntentFilter intentFilter;
+    private String broadCastAction = "com.avit.apnamzp_partner.NEW_ORDER_SATHI_NOTIFICATION";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        navController = Navigation.findNavController(this,R.id.nav_host_fragment_container);
+
+        String action = getIntent().getStringExtra("action");
+
+        if(action != null && action.equals("orders")){
+            openOrdersFragment();
+        }
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -75,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("NotificationService", "onComplete: " + token);
 
                         DeliverySathi deliverySathi = LocalDB.getDeliverySathiDetails(getApplicationContext());
+
+                        Log.i(TAG, "onComplete: " + deliverySathi.getFcmId() + "\n" + token);
+
                         if(deliverySathi.getFcmId() == null || !deliverySathi.getFcmId().equals(token)){
 
                             deliverySathi.setFcmId(token);
@@ -86,12 +104,31 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+        // Broadcast receiver
 
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(broadCastAction);
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(broadCastAction)){
+                    Log.i(TAG, "onReceive: ");
+                    openOrdersFragment();
+                }
+            }
+        };
+
+    }
+
+    private void openOrdersFragment(){
+        navController.navigate(R.id.ordersFragment);
     }
 
     private void sendFcmIdToServer(DeliverySathi deliverySathi){
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
+
 
         Call<ResponseBody> call = networkAPI.updateFcmToken(deliverySathi,"sathi");
         call.enqueue(new Callback<ResponseBody>() {
@@ -107,6 +144,19 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "onFailure: ", t);
             }
         });
+
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(receiver,intentFilter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
 }
