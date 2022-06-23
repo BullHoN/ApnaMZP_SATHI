@@ -59,6 +59,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         OrderingItemsAdapter adapter = new OrderingItemsAdapter(curr.getOrderItems(),context);
         holder.orderingItemsList.setAdapter(adapter);
 
+        holder.totalAmountToTakeView.setText("Total Amount To Take: ₹" + curr.getTotalAmountToTake());
+
         holder.orderId.setText("Order Id: #" + curr.get_id());
         holder.shopName.setText("Name: " + curr.getShopInfo().getName());
         holder.shopAddress.setText("Address: " + curr.getShopInfo().getRawAddress());
@@ -227,6 +229,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         public RecyclerView itemsOnTheWayRecyclerView;
         public MaterialButton nextActionButton;
         public ImageButton moreActionsMenuButton;
+        public TextView totalAmountToTakeView;
 
         public OrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -241,6 +244,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             itemsOnTheWayToggleButton = itemView.findViewById(R.id.itemsOn_the_way_toggle_button);
             expandableItemsOnTheWayDetailsView = itemView.findViewById(R.id.items_on_the_way_expandable_layout);
             itemsOnTheWayRecyclerView = itemView.findViewById(R.id.items_on_the_way_recyclerview);
+
+            totalAmountToTakeView = itemView.findViewById(R.id.totalAmountToTake);
 
             shopName = itemView.findViewById(R.id.shop_name);
             shopPhoneNo = itemView.findViewById(R.id.shop_phoneNo);

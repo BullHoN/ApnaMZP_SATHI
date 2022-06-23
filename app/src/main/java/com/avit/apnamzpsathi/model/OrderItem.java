@@ -11,6 +11,18 @@ public class OrderItem {
     private Integer orderStatus;
     private List<String> itemsOnTheWay;
     private boolean itemsOnTheWayVisible;
+    private Integer totalAmountToTake;
+
+    public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo, Integer orderStatus, List<String> itemsOnTheWay, boolean itemsOnTheWayVisible, Integer totalAmountToTake) {
+        this._id = _id;
+        this.orderItems = orderItems;
+        this.shopInfo = shopInfo;
+        this.userInfo = userInfo;
+        this.orderStatus = orderStatus;
+        this.itemsOnTheWay = itemsOnTheWay;
+        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.totalAmountToTake = totalAmountToTake;
+    }
 
     public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo, Integer orderStatus, List<String> itemsOnTheWay) {
         this._id = _id;
@@ -35,6 +47,10 @@ public class OrderItem {
         this.shopInfo = shopInfo;
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
+    }
+
+    public Integer getTotalAmountToTake() {
+        return totalAmountToTake;
     }
 
     public boolean isItemsOnTheWayVisible() {
