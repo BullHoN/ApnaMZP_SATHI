@@ -101,4 +101,49 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
             }
         });
     }
+
+    @Override
+    public void updateItemsOnTheWayTotalCost(String orderId, String totalCost) {
+        Retrofit retrofit = RetrofitClient.getInstance();
+        NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
+
+        Call<NetworkResponse> call = networkAPI.updateItemsOnTheWayPrice(orderId,totalCost);
+        call.enqueue(new Callback<NetworkResponse>() {
+            @Override
+            public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
+                Toasty.success(getContext(),"Update Successfull",Toasty.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onFailure(Call<NetworkResponse> call, Throwable t) {
+                Toasty.error(getContext(),t.getMessage(),Toasty.LENGTH_SHORT)
+                        .show();
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
+
+    }
+
+    @Override
+    public void cancelItemsOnTheWay(String orderId) {
+        Retrofit retrofit = RetrofitClient.getInstance();
+        NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
+
+        Call<NetworkResponse> call = networkAPI.cancelItemsOnTheWay(orderId);
+        call.enqueue(new Callback<NetworkResponse>() {
+            @Override
+            public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
+                Toasty.warning(getContext(),"Items On The Way Cancelled",Toasty.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onFailure(Call<NetworkResponse> call, Throwable t) {
+                Toasty.error(getContext(),t.getMessage(),Toasty.LENGTH_SHORT).show();
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
+
+    }
 }

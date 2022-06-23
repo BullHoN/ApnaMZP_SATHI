@@ -9,6 +9,18 @@ public class OrderItem {
     private UserInfo shopInfo;
     private UserInfo userInfo;
     private Integer orderStatus;
+    private List<String> itemsOnTheWay;
+    private boolean itemsOnTheWayVisible;
+
+    public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo, Integer orderStatus, List<String> itemsOnTheWay) {
+        this._id = _id;
+        this.orderItems = orderItems;
+        this.shopInfo = shopInfo;
+        this.userInfo = userInfo;
+        this.orderStatus = orderStatus;
+        this.itemsOnTheWay = itemsOnTheWay;
+        this.itemsOnTheWayVisible = false;
+    }
 
     public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo) {
         this._id = _id;
@@ -23,6 +35,18 @@ public class OrderItem {
         this.shopInfo = shopInfo;
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
+    }
+
+    public boolean isItemsOnTheWayVisible() {
+        return itemsOnTheWayVisible;
+    }
+
+    public void setItemsOnTheWayVisible(boolean itemsOnTheWayVisible) {
+        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+    }
+
+    public List<String> getItemsOnTheWay() {
+        return itemsOnTheWay;
     }
 
     public Integer getOrderStatus() {

@@ -39,4 +39,10 @@ public interface NetworkAPI {
     @POST("/user_routes/updateFCM")
     Call<ResponseBody> updateFcmToken(@Body DeliverySathi deliverySathi,@Query("user_type") String userType);
 
+    @POST("/sathi/updateItemsOnTheWayPrice/{order_id}")
+    Call<NetworkResponse> updateItemsOnTheWayPrice(@Path("order_id") String orderId,@Query("itemsOnTheWayActualCost") String itemsOnTheWayActualCost);
+
+    @POST("/sathi/cancelItemsOnTheWay/{order_id}")
+    Call<NetworkResponse> cancelItemsOnTheWay(@Path("order_id") String orderId);
+
 }

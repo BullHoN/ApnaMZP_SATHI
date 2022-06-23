@@ -3,4 +3,13 @@
     <item
         android:title="Transfer Order"
         android:id="@+id/transfer_order" />
+
+    <item
+        android:title="Cancel Items On The Way"
+        android:id="@+id/cancel_items_on_the_way" />
+
+    <item
+        android:title="Add Cost Of Items On The Way"
+        android:id="@+id/add_cost_of_items_on_the_way" />
+
 </menu>

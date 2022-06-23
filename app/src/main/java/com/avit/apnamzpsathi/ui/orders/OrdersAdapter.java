@@ -1,6 +1,8 @@
 package com.avit.apnamzpsathi.ui.orders;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,13 +19,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.model.OrderItem;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdapterViewHolder>{
 
     public interface OrdersActions {
         void updateOrderStatus(String orderId,Integer updatedStatus);
+        void updateItemsOnTheWayTotalCost(String orderId, String totalCost);
+        void cancelItemsOnTheWay(String orderId);
     }
 
     private List<OrderItem> orderItems;
@@ -91,10 +98,32 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             }
         });
 
+        if(curr.getItemsOnTheWay() != null && curr.getItemsOnTheWay().size() > 0){
+            holder.itemsOnTheWayRecyclerView.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
+            OrderItemsOnTheWayAdapter orderingItemsAdapter = new OrderItemsOnTheWayAdapter(context,curr.getItemsOnTheWay());
+            holder.itemsOnTheWayRecyclerView.setAdapter(orderingItemsAdapter);
+
+            holder.itemsOnTheWayToggleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(curr.isItemsOnTheWayVisible()){
+                        curr.setItemsOnTheWayVisible(false);
+                        holder.expandableItemsOnTheWayDetailsView.setVisibility(View.GONE);
+                    }
+                    else {
+                        curr.setItemsOnTheWayVisible(true);
+                        holder.expandableItemsOnTheWayDetailsView.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
+
+
+
         holder.moreActionsMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showMenu(view);
+                showMenu(view,curr.get_id());
             }
         });
 
@@ -117,7 +146,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
 
     }
 
-    private void showMenu(View v){
+    private void showMenu(View v,String order_id){
         PopupMenu popupMenu = new PopupMenu(context,v);
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -128,6 +157,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
                     case R.id.transfer_order:
                         // TODO: call prakhar
                         return true;
+                    case R.id.cancel_items_on_the_way:
+                        // TODO: Cancel Items On The Way
+                        ordersActions.cancelItemsOnTheWay(order_id);
+                        return true;
+                    case R.id.add_cost_of_items_on_the_way:
+                        // TODO: Add Cost Of Items On The Way
+                        addCostOfItemsOnTheWayDialog(order_id);
+                        return true;
                     default:
                         return  false;
                 }
@@ -137,6 +174,35 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
 
         popupMenu.inflate(R.menu.menu_order);
         popupMenu.show();
+
+    }
+
+    private void addCostOfItemsOnTheWayDialog(String order_id){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_order_item_actions,null,false);
+
+        TextView titleView = view.findViewById(R.id.title);
+        titleView.setText("Enter Total Cost Of All Items On The Way");
+
+        TextInputEditText textInputEditText = view.findViewById(R.id.dialog_input);
+
+        builder.setView(view);
+
+        builder.setPositiveButton("submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String data = textInputEditText.getText().toString();
+                if(data.length() == 0){
+                    Toasty.error(context,"Enter Valid Data",Toasty.LENGTH_SHORT).show();
+                    return;
+                }
+
+                ordersActions.updateItemsOnTheWayTotalCost(order_id,data);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
     }
 
@@ -157,6 +223,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         public TextView shopName,shopPhoneNo,shopAddress;
         public LinearLayout customerDetailsToggleButton, expandableCustomerDetailsView;
         public LinearLayout shopDetailsToggleButton, expandableShopDetailsView;
+        public LinearLayout itemsOnTheWayToggleButton, expandableItemsOnTheWayDetailsView;
+        public RecyclerView itemsOnTheWayRecyclerView;
         public MaterialButton nextActionButton;
         public ImageButton moreActionsMenuButton;
 
@@ -169,6 +237,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             customerAddress = itemView.findViewById(R.id.customer_address);
             customerDetailsToggleButton = itemView.findViewById(R.id.customer_toggle_button);
             expandableCustomerDetailsView = itemView.findViewById(R.id.expandable_customer_details);
+
+            itemsOnTheWayToggleButton = itemView.findViewById(R.id.itemsOn_the_way_toggle_button);
+            expandableItemsOnTheWayDetailsView = itemView.findViewById(R.id.items_on_the_way_expandable_layout);
+            itemsOnTheWayRecyclerView = itemView.findViewById(R.id.items_on_the_way_recyclerview);
 
             shopName = itemView.findViewById(R.id.shop_name);
             shopPhoneNo = itemView.findViewById(R.id.shop_phoneNo);
