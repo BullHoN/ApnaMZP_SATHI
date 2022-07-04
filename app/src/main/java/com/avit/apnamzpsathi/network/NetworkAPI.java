@@ -1,5 +1,6 @@
 package com.avit.apnamzpsathi.network;
 
+import com.avit.apnamzpsathi.model.CashInHand;
 import com.avit.apnamzpsathi.model.DeliveryInfoData;
 import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.model.NetworkResponse;
@@ -44,5 +45,8 @@ public interface NetworkAPI {
 
     @POST("/sathi/cancelItemsOnTheWay/{order_id}")
     Call<NetworkResponse> cancelItemsOnTheWay(@Path("order_id") String orderId);
+
+    @GET("/sathi/cashInHand/{delivery_sathi_id}")
+    Call<CashInHand> getCashInHand(@Path("delivery_sathi_id") String delvierySathiId);
 
 }

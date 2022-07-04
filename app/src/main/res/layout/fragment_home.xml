@@ -84,17 +84,19 @@
                             android:layout_height="70dp"/>
 
                         <TextView
+                            android:gravity="center"
                             android:textSize="20sp"
                             android:fontFamily="@font/roboto_bold"
-                            android:text="Earnings"
+                            android:text="Cash"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
                         <TextView
+                            android:id="@+id/cash_in_hand"
                             android:textSize="18dp"
                             android:textColor="@color/success"
                             android:fontFamily="@font/roboto_bold"
-                            android:text="$100"
+                            android:text="₹0"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
@@ -169,7 +171,7 @@
                             android:textSize="18dp"
                             android:textColor="@color/success"
                             android:fontFamily="@font/roboto_bold"
-                            android:text="$100"
+                            android:text="₹0"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 

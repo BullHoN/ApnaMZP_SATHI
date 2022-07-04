@@ -30,7 +30,9 @@ import android.view.ViewGroup;
 import com.avit.apnamzpsathi.MainActivity;
 import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.databinding.FragmentHomeBinding;
+import com.avit.apnamzpsathi.db.LocalDB;
 import com.avit.apnamzpsathi.db.SharedPrefNames;
+import com.avit.apnamzpsathi.model.CashInHand;
 import com.avit.apnamzpsathi.model.DeliveryInfoData;
 import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.network.NetworkAPI;
@@ -87,6 +89,8 @@ public class HomeFragment extends Fragment {
 
         viewModel.getDataFromServer(getContext());
         viewModel.getIncentiveDataFromServer(getContext());
+
+        getCashInHand();
 
         binding.orderPayItems.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         DeliverySathiInfoAdapter orderPayAdapter = new DeliverySathiInfoAdapter(getContext(),new ArrayList<>());
@@ -149,6 +153,34 @@ public class HomeFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void getCashInHand(){
+        Retrofit retrofit = RetrofitClient.getInstance();
+        NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
+
+        Call<CashInHand> call = networkAPI.getCashInHand(LocalDB.getDeliverySathiDetails(getContext()).getPhoneNo());
+        call.enqueue(new Callback<CashInHand>() {
+            @Override
+            public void onResponse(Call<CashInHand> call, Response<CashInHand> response) {
+                CashInHand cashInHand = response.body();
+
+                binding.cashInHand.setText("₹" + cashInHand.getCashInHand());
+                if(cashInHand.getCashInHand() >= 0){
+                    binding.cashInHand.setTextColor(getResources().getColor(R.color.successColor));
+                }
+                else {
+                    binding.cashInHand.setTextColor(getResources().getColor(R.color.errorColor));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CashInHand> call, Throwable t) {
+                Toasty.error(getContext(),t.getMessage(),Toasty.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
     }
 
     private void getTheLocationPermission(){
