@@ -12,6 +12,8 @@ import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.db.LocalDB;
 import com.avit.apnamzpsathi.db.SharedPrefNames;
 import com.avit.apnamzpsathi.model.DeliverySathi;
+import com.avit.apnamzpsathi.model.LoginPostData;
+import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.utils.Validation;
@@ -63,22 +65,39 @@ public class AuthActivity extends AppCompatActivity {
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
-        Call<ResponseBody> call = networkAPI.login(phoneNo,password);
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<NetworkResponse> call = networkAPI.login(new LoginPostData(phoneNo,password));
+        call.enqueue(new Callback<NetworkResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Toasty.success(getApplicationContext(),"Login Successfull",Toasty.LENGTH_SHORT)
-                        .show();
+            public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
 
-                DeliverySathi deliverySathi = new DeliverySathi(phoneNo);
-                LocalDB.saveSathiDetails(getApplicationContext(),deliverySathi);
+                NetworkResponse networkResponse = response.body();
 
-                openHomeActivity();
+                if(networkResponse == null){
+                    Toasty.error(getApplicationContext(),"Some Error Occured",Toasty.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
+                if(networkResponse.isSuccess()){
+                    Toasty.success(getApplicationContext(),"Login Successfull",Toasty.LENGTH_SHORT)
+                            .show();
+
+                    DeliverySathi deliverySathi = new DeliverySathi(phoneNo);
+                    LocalDB.saveSathiDetails(getApplicationContext(),deliverySathi);
+
+                    openHomeActivity();
+
+                }
+                else {
+                    Toasty.error(getApplicationContext(),networkResponse.getDesc(),Toasty.LENGTH_SHORT)
+                    .show();
+                }
+
 
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<NetworkResponse> call, Throwable t) {
                 Toasty.error(getApplicationContext(),t.getMessage(),Toasty.LENGTH_SHORT)
                         .show();
                 Log.e(TAG, "onFailure: ", t);

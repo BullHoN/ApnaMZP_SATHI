@@ -5,9 +5,9 @@ public class DeliverySathi {
     private String latitude;
     private String longitude;
     private String fcmId;
-    private Number earnings;
-    private Number incentives;
-    private Number deliveries;
+    private int earnings;
+    private int incentives;
+    private int deliveries;
 
     public DeliverySathi(String phoneNo, String latitude, String longitude) {
         this.phoneNo = phoneNo;
@@ -15,22 +15,22 @@ public class DeliverySathi {
         this.longitude = longitude;
     }
 
-    public DeliverySathi(String phoneNo, Number earnings, Number incentives, Number deliveries) {
+    public DeliverySathi(String phoneNo, int earnings, int incentives, int deliveries) {
         this.phoneNo = phoneNo;
         this.earnings = earnings;
         this.incentives = incentives;
         this.deliveries = deliveries;
     }
 
-    public Number getEarnings() {
+    public int getEarnings() {
         return earnings;
     }
 
-    public Number getIncentives() {
+    public int getIncentives() {
         return incentives;
     }
 
-    public Number getDeliveries() {
+    public int getDeliveries() {
         return deliveries;
     }
 

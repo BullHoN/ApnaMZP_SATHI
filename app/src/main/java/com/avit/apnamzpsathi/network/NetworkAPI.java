@@ -3,6 +3,7 @@ package com.avit.apnamzpsathi.network;
 import com.avit.apnamzpsathi.model.CashInHand;
 import com.avit.apnamzpsathi.model.DeliveryInfoData;
 import com.avit.apnamzpsathi.model.DeliverySathi;
+import com.avit.apnamzpsathi.model.LoginPostData;
 import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.model.OrderItem;
 
@@ -34,8 +35,8 @@ public interface NetworkAPI {
     @POST("/partner/order/updateStatus")
     Call<NetworkResponse> updateOrderStatus(@Query("orderId") String orderId,@Query("orderStatus") Integer orderStatus);
 
-    @GET("/login")
-    Call<ResponseBody> login(@Query("phoneNo") String phoneNo,@Query("password") String password);
+    @POST("/sathi/login")
+    Call<NetworkResponse> login(@Body LoginPostData loginPostData);
 
     @POST("/user_routes/updateFCM")
     Call<ResponseBody> updateFcmToken(@Body DeliverySathi deliverySathi,@Query("user_type") String userType);
