@@ -35,6 +35,7 @@ import com.avit.apnamzpsathi.db.SharedPrefNames;
 import com.avit.apnamzpsathi.model.CashInHand;
 import com.avit.apnamzpsathi.model.DeliveryInfoData;
 import com.avit.apnamzpsathi.model.DeliverySathi;
+import com.avit.apnamzpsathi.model.DeliverySathiDayInfo;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.services.LocationBroadCastReceiver;
@@ -60,7 +61,9 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -91,6 +94,7 @@ public class HomeFragment extends Fragment {
         viewModel.getIncentiveDataFromServer(getContext());
 
         getCashInHand();
+        getTodayDayInfo();
 
         binding.orderPayItems.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         DeliverySathiInfoAdapter orderPayAdapter = new DeliverySathiInfoAdapter(getContext(),new ArrayList<>());
@@ -152,6 +156,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        binding.earningsContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_homeFragment_to_earningFragment);
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -176,6 +187,32 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CashInHand> call, Throwable t) {
+                Toasty.error(getContext(),t.getMessage(),Toasty.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+    }
+
+    private void getTodayDayInfo(){
+        String deliverySathi = LocalDB.getDeliverySathiDetails(getContext()).getPhoneNo();
+        Date todayDate = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Retrofit retrofit = RetrofitClient.getInstance();
+        NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
+
+        Call<DeliverySathiDayInfo> call = networkAPI.getDeliverySaathiDayInfo(deliverySathi,simpleDateFormat.format(todayDate));
+        call.enqueue(new Callback<DeliverySathiDayInfo>() {
+            @Override
+            public void onResponse(Call<DeliverySathiDayInfo> call, Response<DeliverySathiDayInfo> response) {
+                DeliverySathiDayInfo deliverySathiDayInfo = response.body();
+                binding.todayEarning.setText("₹" + deliverySathiDayInfo.getTotalEarnings());
+                binding.rides.setText(String.valueOf(deliverySathiDayInfo.getNoOfOrders()));
+            }
+
+            @Override
+            public void onFailure(Call<DeliverySathiDayInfo> call, Throwable t) {
                 Toasty.error(getContext(),t.getMessage(),Toasty.LENGTH_SHORT)
                         .show();
             }

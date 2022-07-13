@@ -3,6 +3,7 @@ package com.avit.apnamzpsathi.network;
 import com.avit.apnamzpsathi.model.CashInHand;
 import com.avit.apnamzpsathi.model.DeliveryInfoData;
 import com.avit.apnamzpsathi.model.DeliverySathi;
+import com.avit.apnamzpsathi.model.DeliverySathiDayInfo;
 import com.avit.apnamzpsathi.model.LoginPostData;
 import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.model.OrderItem;
@@ -18,7 +19,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface NetworkAPI {
-    String SERVER_URL = "http://192.168.1.3:5000/";
+    String SERVER_URL = "http://192.168.63.85:5000/";
 
     @GET("/getDeliveryPriceInfoSathi")
     Call<List<DeliveryInfoData>> getDeliveryPricingInfo();
@@ -49,5 +50,8 @@ public interface NetworkAPI {
 
     @GET("/sathi/cashInHand/{delivery_sathi_id}")
     Call<CashInHand> getCashInHand(@Path("delivery_sathi_id") String delvierySathiId);
+
+    @GET("/sathi/dayInfo/{deliverySathi}")
+    Call<DeliverySathiDayInfo> getDeliverySaathiDayInfo(@Path("deliverySathi") String deliverySathi, @Query("ordersDateString") String ordersDateString);
 
 }

@@ -2,65 +2,89 @@ package com.avit.apnamzpsathi.ui.earnings;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 
 import com.avit.apnamzpsathi.R;
+import com.avit.apnamzpsathi.databinding.FragmentEarningBinding;
+import com.avit.apnamzpsathi.db.LocalDB;
+import com.avit.apnamzpsathi.model.DeliverySathiDayInfo;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EarningFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 public class EarningFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public EarningFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EarningFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EarningFragment newInstance(String param1, String param2) {
-        EarningFragment fragment = new EarningFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private FragmentEarningBinding binding;
+    private EarningsViewModel viewModel;
+    private String deliverySathi;
+    private String TAG = "EarningFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_earning, container, false);
+
+        binding = FragmentEarningBinding.inflate(inflater,container,false);
+        viewModel = new ViewModelProvider(this).get(EarningsViewModel.class);
+
+        binding.backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(binding.getRoot()).popBackStack();
+            }
+        });
+
+        Date todayDate = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        binding.detailsOnDate.setText("Details For " + simpleDateFormat.format(todayDate));
+
+        deliverySathi = LocalDB.getDeliverySathiDetails(getContext()).getPhoneNo();
+
+        viewModel.getDeliverySathiInfo(getContext(),deliverySathi,simpleDateFormat.format(todayDate));
+
+        binding.calenderView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dateOfMonth) {
+                String monthString = String.valueOf((month+1)), dateOfMonthString = String.valueOf(dateOfMonth);
+                if(month+1 < 10){
+                    monthString = "0" + (month+1);
+                }
+
+                if(dateOfMonth < 10){
+                    dateOfMonthString = "0" + dateOfMonth;
+                }
+
+                String dateString = year + "-" + monthString + "-" + dateOfMonthString;
+
+                binding.detailsOnDate.setText("Details For " + dateString);
+                viewModel.getDeliverySathiInfo(getContext(),deliverySathi,dateString);
+
+            }
+        });
+
+        viewModel.getMutableLiveData().observe(getViewLifecycleOwner(), new Observer<DeliverySathiDayInfo>() {
+            @Override
+            public void onChanged(DeliverySathiDayInfo deliverySathiDayInfo) {
+                Log.i(TAG, "onChanged: " + deliverySathiDayInfo.getTotalEarnings() + " " + deliverySathiDayInfo.getNoOfOrders());
+
+                binding.totalEarnings.setText("₹" + deliverySathiDayInfo.getTotalEarnings());
+                binding.totalOrders.setText(String.valueOf(deliverySathiDayInfo.getNoOfOrders()));
+
+            }
+        });
+
+        return binding.getRoot();
     }
+
 }
