@@ -88,7 +88,20 @@
 
         </LinearLayout>
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loading"
+            app:lottie_loop="true"
+            android:layout_centerInParent="true"
+            android:layout_width="300dp"
+            android:layout_height="300dp" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:visibility="gone"
+            android:id="@+id/no_orders_animation"
+            app:lottie_loop="true"
+            android:layout_centerInParent="true"
+            android:layout_width="250dp"
+            android:layout_height="250dp" />
 
     </RelativeLayout>
 

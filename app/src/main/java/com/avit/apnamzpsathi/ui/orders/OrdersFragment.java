@@ -48,6 +48,8 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         binding = FragmentOrdersBinding.inflate(inflater,container,false);
         viewModel = new ViewModelProvider(this).get(OrderFragmentViewModel.class);
 
+        binding.loading.setAnimation(R.raw.orders_loading);
+        binding.loading.playAnimation();
 
         deliverySathi = LocalDB.getDeliverySathiDetails(getContext());
 
@@ -68,12 +70,25 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
             @Override
             public void onChanged(List<OrderItem> orderItems) {
                 ordersAdapter.updateItems(orderItems);
+                binding.loading.setVisibility(View.GONE);
+
+                if(orderItems.size() == 0){
+                    binding.noOrdersAnimation.setVisibility(View.VISIBLE);
+                    binding.noOrdersAnimation.setAnimation(R.raw.no_orders_animation);
+                    binding.noOrdersAnimation.playAnimation();
+                }
+                else {
+                    binding.noOrdersAnimation.setVisibility(View.GONE);
+                }
+
             }
         });
 
         binding.deliveryFilter.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
+                binding.loading.setAnimation(R.raw.orders_loading);
+                binding.loading.playAnimation();
                 switch (checkedId){
                     case R.id.new_orders:
                         viewModel.getOrdersFromServer(getContext(), deliverySathi.getPhoneNo(), 4);
