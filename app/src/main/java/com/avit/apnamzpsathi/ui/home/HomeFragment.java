@@ -40,6 +40,7 @@ import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.services.LocationBroadCastReceiver;
 import com.avit.apnamzpsathi.services.LocationUpdatesService;
+import com.avit.apnamzpsathi.utils.PrettyStrings;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -207,8 +208,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<DeliverySathiDayInfo> call, Response<DeliverySathiDayInfo> response) {
                 DeliverySathiDayInfo deliverySathiDayInfo = response.body();
-                binding.todayEarning.setText("₹" + deliverySathiDayInfo.getTotalEarnings());
+                binding.todayEarning.setText("₹" + deliverySathiDayInfo.getEarnings());
                 binding.rides.setText(String.valueOf(deliverySathiDayInfo.getNoOfOrders()));
+                binding.incentiveAmount.setText(PrettyStrings.getPriceInRupees(deliverySathiDayInfo.getIncentives()));
             }
 
             @Override

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +52,13 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         deliverySathi = LocalDB.getDeliverySathiDetails(getContext());
 
         viewModel.getOrdersFromServer(getContext(),deliverySathi.getPhoneNo(),4);
+
+        binding.backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(binding.getRoot()).popBackStack();
+            }
+        });
 
         binding.ordersList.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
         OrdersAdapter ordersAdapter = new OrdersAdapter(new ArrayList<>(),getContext(),this);

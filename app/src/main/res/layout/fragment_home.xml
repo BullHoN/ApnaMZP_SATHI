@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:isScrollContainer="true"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fillViewport="true"
-    android:layout_height="match_parent">
+    android:isScrollContainer="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,165 +14,130 @@
 
         <LinearLayout
             android:id="@+id/header"
-            android:weightSum="1"
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primaryColor"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="12dp"
-            android:orientation="horizontal">
+            android:weightSum="1">
 
             <TextView
-                android:layout_weight="1"
-                android:textColor="@color/white"
+                android:textSize="22sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Apna MZP Sathi" />
+                android:text="Apna MZP Sathi"
+                android:textColor="@color/white" />
 
             <LinearLayout
                 android:id="@+id/statusButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:paddingVertical="5dp"
-                android:paddingHorizontal="8dp">
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="5dp">
 
                 <TextView
                     android:id="@+id/statusText"
-                    android:fontFamily="@font/roboto_bold"
-                    android:textColor="@android:color/holo_green_dark"
-                    android:text="Online"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Online"
+                    android:textColor="@android:color/holo_green_dark" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:padding="10dp"
-            android:layout_below="@id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_below="@id/header"
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <LinearLayout
-                android:weightSum="3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <androidx.cardview.widget.CardView
-                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:cardUseCompatPadding="true"
-                    app:cardElevation="4dp">
+                    android:layout_weight="1"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true">
 
                     <LinearLayout
-                        android:gravity="center"
-                        android:padding="12dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
                         <ImageView
-                            android:src="@drawable/ic_money"
                             android:layout_width="60dp"
-                            android:layout_height="70dp"/>
+                            android:layout_height="70dp"
+                            android:src="@drawable/ic_money" />
 
                         <TextView
-                            android:gravity="center"
-                            android:textSize="20sp"
-                            android:fontFamily="@font/roboto_bold"
-                            android:text="Cash"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:gravity="center"
+                            android:text="Cash In Hand"
+                            android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/cash_in_hand"
-                            android:textSize="18dp"
-                            android:textColor="@color/success"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:fontFamily="@font/roboto_bold"
                             android:text="₹0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:textColor="@color/success"
+                            android:textSize="18dp" />
 
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
-                    android:layout_weight="1"
                     android:id="@+id/deliveries"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:cardUseCompatPadding="true"
-                    app:cardElevation="4dp">
-
-                    <LinearLayout
-                        android:gravity="center"
-                        android:padding="12dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:src="@drawable/ic_delivery"
-                            android:layout_width="60dp"
-                            android:layout_height="70dp"/>
-
-                        <TextView
-                            android:textSize="20sp"
-                            android:fontFamily="@font/roboto_bold"
-                            android:text="Deliveries"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <TextView
-                            android:textSize="18dp"
-                            android:textColor="@color/success"
-                            android:fontFamily="@font/roboto_bold"
-                            android:text="10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-                <androidx.cardview.widget.CardView
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:cardUseCompatPadding="true"
-                    app:cardElevation="4dp">
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true">
 
                     <LinearLayout
-                        android:gravity="center"
-                        android:padding="12dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
                         <ImageView
-                            android:src="@drawable/ic_incentive"
                             android:layout_width="60dp"
-                            android:layout_height="70dp"/>
+                            android:layout_height="70dp"
+                            android:src="@drawable/ic_delivery" />
 
                         <TextView
-                            android:textSize="20sp"
-                            android:fontFamily="@font/roboto_bold"
-                            android:text="Incentive"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="New Orders"
+                            android:textSize="20sp" />
 
-                        <TextView
-                            android:textSize="18dp"
-                            android:textColor="@color/success"
-                            android:fontFamily="@font/roboto_bold"
-                            android:text="₹0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/roboto_bold"-->
+<!--                            android:text="10"-->
+<!--                            android:textColor="@color/success"-->
+<!--                            android:textSize="18dp" />-->
 
                     </LinearLayout>
 
@@ -181,130 +145,174 @@
 
             </LinearLayout>
 
-        <LinearLayout
-            android:weightSum="2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:clickable="true"
-                android:focusable="true"
-                android:id="@+id/earnings_container"
-                android:layout_weight="1"
+            <TextView
+                android:text="Today's Payout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:gravity="center"
-                    android:padding="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:src="@drawable/ic_money"
-                        android:layout_width="60dp"
-                        android:layout_height="70dp"/>
-
-                    <TextView
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="Today's Earning"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:id="@+id/today_earning"
-                        android:textSize="18dp"
-                        android:textColor="@color/success"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="₹0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:gravity="center"
-                    android:padding="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:src="@drawable/ic_rides"
-                        android:layout_width="60dp"
-                        android:layout_height="70dp"/>
-
-                    <TextView
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="Rides"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:id="@+id/rides"
-                        android:textSize="18dp"
-                        android:textColor="@color/success"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
+                android:layout_height="wrap_content" />
 
             <LinearLayout
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:background="@color/primaryColor"
-                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
-                <ImageView
-                    android:src="@drawable/ic_orders"
-                    android:layout_width="60dp"
-                    android:layout_height="70dp" />
-
-                <LinearLayout
-                    android:layout_marginLeft="5dp"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/earnings_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="70dp"
+                            android:src="@drawable/ic_money" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:gravity="center"
+                            android:text="Order's &#10; Earning"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/today_earning"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="₹0"
+                            android:textColor="@color/success"
+                            android:textSize="18dp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="70dp"
+                            android:src="@drawable/ic_incentive" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="Incentive"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/incentive_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="₹0"
+                            android:textColor="@color/success"
+                            android:textSize="18dp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="70dp"
+                            android:src="@drawable/ic_rides" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:gravity="center"
+                            android:text="Rides"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/rides"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="0"
+                            android:textColor="@color/success"
+                            android:textSize="18dp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/primaryColor"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/ic_orders" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:textSize="22sp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:textColor="@color/white"
-                        android:text="Order Pay"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="Order Pay"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
 
                     <TextView
-                        android:textColor="#CDCDCD"
-                        android:text="earnings per order"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="earnings per order"
+                        android:textColor="#CDCDCD" />
 
                 </LinearLayout>
 
@@ -312,55 +320,55 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/orderPayItems"
-                android:isScrollContainer="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:isScrollContainer="false"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_deliveryinfo" />
 
             <LinearLayout
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:background="@color/primaryColor"
-                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="8dp"
+                android:background="@color/primaryColor"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <ImageView
-                    android:src="@drawable/ic_incentive"
                     android:layout_width="60dp"
-                    android:layout_height="70dp" />
+                    android:layout_height="70dp"
+                    android:src="@drawable/ic_incentive" />
 
                 <LinearLayout
-                    android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:textSize="22sp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:textColor="@color/white"
-                        android:text="Target Incentive"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="Target Incentive"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
 
                     <TextView
-                        android:textColor="#CDCDCD"
-                        android:text="for reaching order pay targets"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="for reaching order pay targets"
+                        android:textColor="#CDCDCD" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:isScrollContainer="false"
                 android:id="@+id/incentiveItems"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:isScrollContainer="false"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_deliveryinfo" />
 

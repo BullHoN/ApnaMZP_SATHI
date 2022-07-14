@@ -3,6 +3,7 @@ package com.avit.apnamzpsathi.ui.earnings;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,6 +19,9 @@ import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.databinding.FragmentEarningBinding;
 import com.avit.apnamzpsathi.db.LocalDB;
 import com.avit.apnamzpsathi.model.DeliverySathiDayInfo;
+import com.avit.apnamzpsathi.utils.PrettyStrings;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,6 +40,19 @@ public class EarningFragment extends Fragment {
 
         binding = FragmentEarningBinding.inflate(inflater,container,false);
         viewModel = new ViewModelProvider(this).get(EarningsViewModel.class);
+
+//        MaterialDatePicker dateRangePicker =  MaterialDatePicker.Builder.dateRangePicker()
+//                .setTitleText("Select Dates")
+//                .setSelection(Pair.create(MaterialDatePicker.thisMonthInUtcMilliseconds(),))
+//                .build();
+//
+//        dateRangePicker.show(getChildFragmentManager(),"date_range_picker");
+//        dateRangePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+//            @Override
+//            public void onPositiveButtonClick(Object selection) {
+//                Log.i(TAG, "onPositiveButtonClick: " + dateRangePicker.getHeaderText());
+//            }
+//        });
 
         binding.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +97,8 @@ public class EarningFragment extends Fragment {
 
                 binding.totalEarnings.setText("₹" + deliverySathiDayInfo.getTotalEarnings());
                 binding.totalOrders.setText(String.valueOf(deliverySathiDayInfo.getNoOfOrders()));
+                binding.ordersEarning.setText(PrettyStrings.getPriceInRupees(deliverySathiDayInfo.getEarnings()));
+                binding.totalIncentive.setText(PrettyStrings.getPriceInRupees(deliverySathiDayInfo.getIncentives()));
 
             }
         });
