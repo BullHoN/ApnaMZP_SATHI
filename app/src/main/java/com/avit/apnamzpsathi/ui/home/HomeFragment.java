@@ -138,13 +138,13 @@ public class HomeFragment extends Fragment {
                 if(!aBoolean){
                     binding.statusText.setText("OFFLINE");
                     binding.statusText.setTextColor(getResources().getColor(R.color.errorColor));
-                    // TODO: STOP SENDING LOCATION UPDATES
+                    // STOP SENDING LOCATION UPDATES
                     stopService();
                 }
                 else {
                     binding.statusText.setText("ONLINE");
                     binding.statusText.setTextColor(getResources().getColor(R.color.successColor));
-                    // TODO: START SENDING LOCATION UPDATES
+                    // START SENDING LOCATION UPDATES
                     getTheLocationPermission();
                 }
             }

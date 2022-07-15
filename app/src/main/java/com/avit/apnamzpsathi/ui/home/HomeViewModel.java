@@ -43,6 +43,7 @@ public class HomeViewModel extends ViewModel {
         boolean updatedStatus = !deliveryBoyStatusIsOnlineData.getValue();
         editor.putBoolean(SharedPrefNames.DELIVERY_BOY_STATUS,updatedStatus);
         deliveryBoyStatusIsOnlineData.setValue(updatedStatus);
+        editor.apply();
     }
 
     public MutableLiveData<Boolean> getDeliveryBoyStatusIsOnlineData() {

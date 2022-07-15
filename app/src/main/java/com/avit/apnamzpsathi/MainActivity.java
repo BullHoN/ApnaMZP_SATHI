@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         navController = Navigation.findNavController(this,R.id.nav_host_fragment_container);
 
-        String action = getIntent().getStringExtra("action");
+        String action = getIntent().getAction();
 
-        if(action != null && action.equals("orders")){
+        if(action != null && action.equals("com.avit.apnamzp_partner.NEW_ORDER_NOTIFICATION")){
             openOrdersFragment();
         }
 
@@ -122,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openOrdersFragment(){
-        navController.navigate(R.id.ordersFragment);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("new_order_notification",true);
+        navController.navigate(R.id.ordersFragment,bundle);
     }
 
     private void sendFcmIdToServer(DeliverySathi deliverySathi){

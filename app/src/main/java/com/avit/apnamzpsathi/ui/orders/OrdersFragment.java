@@ -1,5 +1,7 @@
 package com.avit.apnamzpsathi.ui.orders;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -22,6 +24,7 @@ import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.model.OrderItem;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
+import com.avit.apnamzpsathi.utils.NotificationUtils;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
@@ -62,6 +65,11 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
             }
         });
 
+        Bundle bundle = getArguments();
+        if(bundle != null && bundle.getBoolean("new_order_notification",false)){
+            showOrderAcceptDialog();
+        }
+
         binding.ordersList.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
         OrdersAdapter ordersAdapter = new OrdersAdapter(new ArrayList<>(),getContext(),this);
         binding.ordersList.setAdapter(ordersAdapter);
@@ -101,6 +109,23 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         });
 
         return binding.getRoot();
+    }
+
+    private void showOrderAcceptDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Accept The Incomming Order");;
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                NotificationUtils.stopSound();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
     @Override

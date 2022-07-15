@@ -58,16 +58,21 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     private void handleNotification(String title,String desc){
-//        NotificationUtils.playSound(getApplicationContext());
-        if(!NotificationUtils.isAppIsInBackground(getApplicationContext())){
-            Intent intent = new Intent();
-            intent.setAction("com.avit.apnamzp_partner.NEW_ORDER_SATHI_NOTIFICATION");
 
-            getApplicationContext().sendBroadcast(intent);
-        }
-        else {
-            showOrderNotification(title,desc);
-        }
+        NotificationUtils.playSound(getApplicationContext());
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        intent.setAction("com.avit.apnamzp_partner.NEW_ORDER_NOTIFICATION");
+
+        startActivity(intent);
+//        if(!NotificationUtils.isAppIsInBackground(getApplicationContext())){
+//
+//        }
+//        else {
+//            showOrderNotification(title,desc);
+//        }
     }
 
     private void showOrderNotification(String title,String desc){
