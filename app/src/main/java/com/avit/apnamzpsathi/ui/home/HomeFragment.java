@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.avit.apnamzpsathi.LocationServiceToogleActivity;
 import com.avit.apnamzpsathi.MainActivity;
 import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.databinding.FragmentHomeBinding;
@@ -133,6 +134,7 @@ public class HomeFragment extends Fragment {
         viewModel.initlializeDeliveryBoyStatus(sharedPreferences);
 
         viewModel.getDeliveryBoyStatusIsOnlineData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(!aBoolean){
@@ -144,8 +146,10 @@ public class HomeFragment extends Fragment {
                 else {
                     binding.statusText.setText("ONLINE");
                     binding.statusText.setTextColor(getResources().getColor(R.color.successColor));
+
                     // START SENDING LOCATION UPDATES
-                    getTheLocationPermission();
+//                    getTheLocationPermission();
+                    startService();
                 }
             }
         });
@@ -289,14 +293,18 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void startService(){
         Log.i(TAG, "startService: ");
-        backgroundLocationUpdatesService = new Intent(getContext(),LocationUpdatesService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ContextCompat.startForegroundService(getContext(),backgroundLocationUpdatesService);
-        } else {
-            getActivity().startService(backgroundLocationUpdatesService);
-        }
+        backgroundLocationUpdatesService = new Intent(getActivity().getApplicationContext(),LocationUpdatesService.class);
+        getActivity().getApplicationContext().startForegroundService(backgroundLocationUpdatesService);
+//        getActivity().startService(backgroundLocationUpdatesService);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            ContextCompat.startForegroundService(getContext(),backgroundLocationUpdatesService);
+////            getActivity().getApplicationContext().startForegroundService(backgroundLocationUpdatesService);
+//        } else {
+//            getActivity().startService(backgroundLocationUpdatesService);
+//        }
     }
 
     private void stopService(){

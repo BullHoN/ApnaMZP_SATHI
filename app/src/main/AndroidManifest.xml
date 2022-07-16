@@ -19,6 +19,9 @@
         android:theme="@style/Theme.ApnaMzpSathi"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".LocationServiceToogleActivity"
+            android:exported="false" />
+        <activity
             android:name=".auth.AuthActivity"
             android:exported="true">
             <intent-filter>
@@ -39,12 +42,12 @@
         <service
             android:name=".services.LocationUpdatesService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:foregroundServiceType="location" />
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
 
         <receiver android:name=".services.LocationBroadCastReceiver">
             <intent-filter>
