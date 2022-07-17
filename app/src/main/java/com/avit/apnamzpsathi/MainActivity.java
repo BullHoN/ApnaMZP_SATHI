@@ -173,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         boolean newOrderArrived = sf.getBoolean("new_order_arrived",false);
+        if(!newOrderArrived){
+            return;
+        }
         editor.putBoolean("new_order_arrived",!newOrderArrived);
         editor.apply();
 
