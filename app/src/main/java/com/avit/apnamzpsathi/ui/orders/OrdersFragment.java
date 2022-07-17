@@ -133,6 +133,8 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
+        Log.i(TAG, "updateOrderStatus: " + updatedStatus);
+
         Call<NetworkResponse> call = networkAPI.updateOrderStatus(orderId,updatedStatus);
         call.enqueue(new Callback<NetworkResponse>() {
             @Override

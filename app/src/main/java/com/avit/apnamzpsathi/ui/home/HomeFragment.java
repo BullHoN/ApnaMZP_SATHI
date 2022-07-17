@@ -92,6 +92,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater,container,false);
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
+
         viewModel.getDataFromServer(getContext());
         viewModel.getIncentiveDataFromServer(getContext());
 

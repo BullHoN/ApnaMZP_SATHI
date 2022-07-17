@@ -15,11 +15,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.avit.apnamzpsathi.db.LocalDB;
+import com.avit.apnamzpsathi.db.SharedPrefNames;
 import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private BroadcastReceiver receiver;
     private IntentFilter intentFilter;
-    private String broadCastAction = "com.avit.apnamzp_partner.NEW_ORDER_SATHI_NOTIFICATION";
+    private String broadCastAction = "com.avit.apnamzp_sathi.NEW_ORDER_SATHI_NOTIFICATION";
 
 
     @Override
@@ -72,10 +74,13 @@ public class MainActivity extends AppCompatActivity {
 
         navController = Navigation.findNavController(this,R.id.nav_host_fragment_container);
 
-        String action = getIntent().getAction();
-
-        if(action != null && action.equals("com.avit.apnamzp_partner.NEW_ORDER_NOTIFICATION")){
+        if(getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals("com.avit.apnamzp_sathi.NEW_ORDER_NOTIFICATION")){
             openOrdersFragment();
+            SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
+            SharedPreferences.Editor editor = sf.edit();
+
+            editor.putBoolean("new_order_arrived",false);
+            editor.apply();
         }
 
         FirebaseMessaging.getInstance().getToken()
@@ -153,6 +158,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sf.edit();
+
+        Log.i(TAG, "onResume: " + sf.getBoolean("new_order_arrived",false));
+
+        if(!sf.contains("new_order_arrived")){
+            return;
+        }
+
+        boolean newOrderArrived = sf.getBoolean("new_order_arrived",false);
+        editor.putBoolean("new_order_arrived",!newOrderArrived);
+        editor.apply();
+
+        if(newOrderArrived){
+            openOrdersFragment();
+        }
+
         registerReceiver(receiver,intentFilter);
     }
 

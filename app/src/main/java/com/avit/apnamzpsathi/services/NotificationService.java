@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -17,6 +18,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.avit.apnamzpsathi.MainActivity;
 import com.avit.apnamzpsathi.R;
+import com.avit.apnamzpsathi.db.SharedPrefNames;
 import com.avit.apnamzpsathi.utils.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -64,7 +66,13 @@ public class NotificationService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        intent.setAction("com.avit.apnamzp_partner.NEW_ORDER_NOTIFICATION");
+        intent.setAction("com.avit.apnamzp_sathi.NEW_ORDER_NOTIFICATION");
+
+        SharedPreferences sf = getApplicationContext().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sf.edit();
+
+        editor.putBoolean("new_order_arrived",true);
+        editor.apply();
 
         startActivity(intent);
 //        if(!NotificationUtils.isAppIsInBackground(getApplicationContext())){
