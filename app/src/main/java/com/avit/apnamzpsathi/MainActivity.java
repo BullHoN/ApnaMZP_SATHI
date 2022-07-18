@@ -23,10 +23,12 @@ import android.util.Log;
 import com.avit.apnamzpsathi.db.LocalDB;
 import com.avit.apnamzpsathi.db.SharedPrefNames;
 import com.avit.apnamzpsathi.model.DeliverySathi;
+import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.services.LocationBroadCastReceiver;
 import com.avit.apnamzpsathi.services.LocationUpdatesService;
+import com.avit.apnamzpsathi.utils.ErrorUtils;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -141,15 +143,20 @@ public class MainActivity extends AppCompatActivity {
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
 
-        Call<ResponseBody> call = networkAPI.updateFcmToken(deliverySathi,"sathi");
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<NetworkResponse> call = networkAPI.updateFcmToken(deliverySathi,"sathi");
+        call.enqueue(new Callback<NetworkResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+            public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
+                if(!response.isSuccessful()){
+                    NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                    Toasty.error(getApplicationContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<NetworkResponse> call, Throwable t) {
                 Toasty.error(getApplicationContext(),"Some Error Occurred",Toasty.LENGTH_SHORT)
                         .show();
                 Log.e(TAG, "onFailure: ", t);

@@ -20,7 +20,7 @@ import retrofit2.http.Query;
 
 public interface NetworkAPI {
     String SERVER_URL = "http://192.168.63.85:5000/";
-//    String SERVER_URL = "https://546b-2409-4063-2109-67d5-d1b4-465b-c713-8c3e.ngrok.io";
+//    String SERVER_URL = "https://482c-2409-4063-2109-67d5-8589-6b8a-35ff-e19.ngrok.io";
 
     @GET("/getDeliveryPriceInfoSathi")
     Call<List<DeliveryInfoData>> getDeliveryPricingInfo();
@@ -41,7 +41,7 @@ public interface NetworkAPI {
     Call<NetworkResponse> login(@Body LoginPostData loginPostData);
 
     @POST("/user_routes/updateFCM")
-    Call<ResponseBody> updateFcmToken(@Body DeliverySathi deliverySathi,@Query("user_type") String userType);
+    Call<NetworkResponse> updateFcmToken(@Body DeliverySathi deliverySathi,@Query("user_type") String userType);
 
     @POST("/sathi/updateItemsOnTheWayPrice/{order_id}")
     Call<NetworkResponse> updateItemsOnTheWayPrice(@Path("order_id") String orderId,@Query("itemsOnTheWayActualCost") String itemsOnTheWayActualCost);

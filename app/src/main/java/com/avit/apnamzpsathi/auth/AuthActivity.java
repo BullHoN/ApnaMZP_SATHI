@@ -16,6 +16,7 @@ import com.avit.apnamzpsathi.model.LoginPostData;
 import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
+import com.avit.apnamzpsathi.utils.ErrorUtils;
 import com.avit.apnamzpsathi.utils.Validation;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -28,7 +29,7 @@ import retrofit2.Retrofit;
 
 public class AuthActivity extends AppCompatActivity {
 
-    private String TAG = "AuthActivity";
+    private String TAG = "AuthActivityi";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +71,15 @@ public class AuthActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
 
-                NetworkResponse networkResponse = response.body();
-
-                if(networkResponse == null){
-                    Toasty.error(getApplicationContext(),"Some Error Occured",Toasty.LENGTH_SHORT)
+                if(!response.isSuccessful()){
+                    NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                    Toasty.error(getApplicationContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
                             .show();
                     return;
                 }
+
+
+                NetworkResponse networkResponse = response.body();
 
                 if(networkResponse.isSuccess()){
                     Toasty.success(getApplicationContext(),"Login Successfull",Toasty.LENGTH_SHORT)

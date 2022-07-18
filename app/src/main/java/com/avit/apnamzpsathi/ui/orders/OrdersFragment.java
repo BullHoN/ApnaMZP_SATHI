@@ -24,6 +24,7 @@ import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.model.OrderItem;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
+import com.avit.apnamzpsathi.utils.ErrorUtils;
 import com.avit.apnamzpsathi.utils.NotificationUtils;
 import com.google.android.material.chip.ChipGroup;
 
@@ -139,6 +140,14 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         call.enqueue(new Callback<NetworkResponse>() {
             @Override
             public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
+
+                if(!response.isSuccessful()){
+                    NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                    Toasty.error(getContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
                 Toasty.success(getContext(),"Order Updated",Toasty.LENGTH_SHORT)
                         .show();
             }
@@ -161,6 +170,13 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         call.enqueue(new Callback<NetworkResponse>() {
             @Override
             public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
+
+                if(!response.isSuccessful()){
+                    NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                    Toasty.error(getContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                            .show();
+                }
+
                 Toasty.success(getContext(),"Update Successfull",Toasty.LENGTH_SHORT)
                         .show();
             }
@@ -184,6 +200,14 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         call.enqueue(new Callback<NetworkResponse>() {
             @Override
             public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
+
+                if(!response.isSuccessful()){
+                    NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                    Toasty.error(getContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
                 Toasty.warning(getContext(),"Items On The Way Cancelled",Toasty.LENGTH_SHORT)
                         .show();
             }

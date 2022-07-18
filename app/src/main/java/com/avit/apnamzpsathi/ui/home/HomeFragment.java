@@ -37,10 +37,12 @@ import com.avit.apnamzpsathi.model.CashInHand;
 import com.avit.apnamzpsathi.model.DeliveryInfoData;
 import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.model.DeliverySathiDayInfo;
+import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.services.LocationBroadCastReceiver;
 import com.avit.apnamzpsathi.services.LocationUpdatesService;
+import com.avit.apnamzpsathi.utils.ErrorUtils;
 import com.avit.apnamzpsathi.utils.PrettyStrings;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -180,6 +182,14 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<CashInHand>() {
             @Override
             public void onResponse(Call<CashInHand> call, Response<CashInHand> response) {
+
+                if(!response.isSuccessful()){
+                    NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                    Toasty.error(getContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
                 CashInHand cashInHand = response.body();
 
                 binding.cashInHand.setText("₹" + cashInHand.getCashInHand());
@@ -212,6 +222,14 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<DeliverySathiDayInfo>() {
             @Override
             public void onResponse(Call<DeliverySathiDayInfo> call, Response<DeliverySathiDayInfo> response) {
+
+                if(!response.isSuccessful()){
+                    NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                    Toasty.error(getContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
                 DeliverySathiDayInfo deliverySathiDayInfo = response.body();
                 binding.todayEarning.setText("₹" + deliverySathiDayInfo.getEarnings());
                 binding.rides.setText(String.valueOf(deliverySathiDayInfo.getNoOfOrders()));

@@ -6,9 +6,11 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.model.OrderItem;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
+import com.avit.apnamzpsathi.utils.ErrorUtils;
 
 import java.util.List;
 
@@ -39,6 +41,13 @@ public class OrderFragmentViewModel extends ViewModel {
         call.enqueue(new Callback<List<OrderItem>>() {
             @Override
             public void onResponse(Call<List<OrderItem>> call, Response<List<OrderItem>> response) {
+               if(!response.isSuccessful()){
+                   NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                   Toasty.error(context,errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                           .show();
+                   return;
+               }
+
                 orderItemMutableLiveData.setValue(response.body());
             }
 

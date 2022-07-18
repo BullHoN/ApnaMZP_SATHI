@@ -6,8 +6,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.avit.apnamzpsathi.model.DeliverySathiDayInfo;
+import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
+import com.avit.apnamzpsathi.utils.ErrorUtils;
 
 import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
@@ -35,6 +37,14 @@ public class EarningsViewModel extends ViewModel {
         call.enqueue(new Callback<DeliverySathiDayInfo>() {
             @Override
             public void onResponse(Call<DeliverySathiDayInfo> call, Response<DeliverySathiDayInfo> response) {
+
+                if(!response.isSuccessful()){
+                    NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                    Toasty.error(context,errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
                 mutableLiveData.setValue(response.body());
             }
 
