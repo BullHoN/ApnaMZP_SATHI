@@ -79,7 +79,7 @@ import retrofit2.Retrofit;
 
 
 public class HomeFragment extends Fragment {
-
+    // comment
     private FragmentHomeBinding binding;
     private HomeViewModel viewModel;
     private String TAG = "HomeFragment";
