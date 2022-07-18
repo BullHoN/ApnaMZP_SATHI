@@ -190,12 +190,12 @@ public class MainActivity extends AppCompatActivity {
             openOrdersFragment();
         }
 
-        registerReceiver(receiver,intentFilter);
+//        registerReceiver(receiver,intentFilter);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(receiver);
+//        unregisterReceiver(receiver);
     }
 }
