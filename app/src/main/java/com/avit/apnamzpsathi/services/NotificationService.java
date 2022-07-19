@@ -63,9 +63,10 @@ public class NotificationService extends FirebaseMessagingService {
 
         NotificationUtils.playSound(getApplicationContext());
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+
         intent.setAction("com.avit.apnamzp_sathi.NEW_ORDER_NOTIFICATION");
 
         SharedPreferences sf = getApplicationContext().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);

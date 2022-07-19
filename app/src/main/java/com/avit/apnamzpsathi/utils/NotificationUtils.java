@@ -52,6 +52,8 @@ public class NotificationUtils {
     public static void stopSound(){
         if(mediaPlayer != null){
             mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
     }
 
