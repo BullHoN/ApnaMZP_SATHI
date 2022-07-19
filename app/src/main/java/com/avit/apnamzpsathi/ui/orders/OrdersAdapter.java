@@ -3,6 +3,8 @@ package com.avit.apnamzpsathi.ui.orders;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -60,16 +62,39 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         OrderingItemsAdapter adapter = new OrderingItemsAdapter(curr.getOrderItems(),context);
         holder.orderingItemsList.setAdapter(adapter);
 
-        holder.totalAmountToTakeView.setText("Total Amount To Take: ₹" + curr.getTotalAmountToTake());
+        holder.totalAmountToGiveView.setText("Total Amount To Give: ₹" + curr.getTotalAmountToGive());
+        if(!curr.isPaid()){
+            holder.totalAmountToTakeView.setText("Total Amount To Take: ₹" + curr.getTotalAmountToTake());
+        }
+        else {
+            holder.totalAmountToTakeView.setText("Payment Done");
+        }
+
 
         holder.orderId.setText("Order Id: #" + curr.get_id());
         holder.shopName.setText("Name: " + curr.getShopInfo().getName());
         holder.shopAddress.setText("Address: " + curr.getShopInfo().getRawAddress());
+
+        holder.shopAddressContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGoogleMaps(curr.getShopInfo().getLatitude(),curr.getShopInfo().getLongitude());
+            }
+        });
+
         holder.shopPhoneNo.setText("Phone No: " + curr.getShopInfo().getPhoneNo());
 
 
         holder.customerName.setText("Name: " + curr.getUserInfo().getName());
         holder.customerAddress.setText("Address: " + curr.getUserInfo().getRawAddress());
+
+        holder.customerAddressContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGoogleMaps(curr.getUserInfo().getLatitude(),curr.getUserInfo().getLongitude());
+            }
+        });
+
         holder.customerPhoneNo.setText("PhoneNo: " + curr.getUserInfo().getPhoneNo());
 
         holder.customerDetailsToggleButton.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +172,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             }
         });
 
+    }
+
+    private void openGoogleMaps(String latitude,String longitude){
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude+","+longitude);
+
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        context.startActivity(mapIntent);
     }
 
     private void showMenu(View v,String order_id){
@@ -230,7 +264,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         public RecyclerView itemsOnTheWayRecyclerView;
         public MaterialButton nextActionButton;
         public ImageButton moreActionsMenuButton;
-        public TextView totalAmountToTakeView;
+        public TextView totalAmountToTakeView, totalAmountToGiveView;
+        public LinearLayout customerAddressContainer, shopAddressContainer;
 
         public OrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -247,6 +282,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             itemsOnTheWayRecyclerView = itemView.findViewById(R.id.items_on_the_way_recyclerview);
 
             totalAmountToTakeView = itemView.findViewById(R.id.totalAmountToTake);
+            totalAmountToGiveView = itemView.findViewById(R.id.totalAmountToGive);
 
             shopName = itemView.findViewById(R.id.shop_name);
             shopPhoneNo = itemView.findViewById(R.id.shop_phoneNo);
@@ -256,6 +292,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
 
             nextActionButton = itemView.findViewById(R.id.next_step);
             moreActionsMenuButton = itemView.findViewById(R.id.more_actions);
+
+            customerAddressContainer = itemView.findViewById(R.id.customer_address_container);
+            shopAddressContainer = itemView.findViewById(R.id.shop_address_container);
 
         }
     }

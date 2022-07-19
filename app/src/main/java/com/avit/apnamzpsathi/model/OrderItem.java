@@ -11,7 +11,33 @@ public class OrderItem {
     private Integer orderStatus;
     private List<String> itemsOnTheWay;
     private boolean itemsOnTheWayVisible;
-    private Integer totalAmountToTake;
+    private Integer totalAmountToTake, totalAmountToGive;
+    private boolean isPaid;
+
+    public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo, Integer orderStatus, List<String> itemsOnTheWay, boolean itemsOnTheWayVisible, Integer totalAmountToTake, Integer totalAmountToGive, boolean isPaid) {
+        this._id = _id;
+        this.orderItems = orderItems;
+        this.shopInfo = shopInfo;
+        this.userInfo = userInfo;
+        this.orderStatus = orderStatus;
+        this.itemsOnTheWay = itemsOnTheWay;
+        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.totalAmountToTake = totalAmountToTake;
+        this.totalAmountToGive = totalAmountToGive;
+        this.isPaid = isPaid;
+    }
+
+    public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo, Integer orderStatus, List<String> itemsOnTheWay, boolean itemsOnTheWayVisible, Integer totalAmountToTake, Integer totalAmountToGive) {
+        this._id = _id;
+        this.orderItems = orderItems;
+        this.shopInfo = shopInfo;
+        this.userInfo = userInfo;
+        this.orderStatus = orderStatus;
+        this.itemsOnTheWay = itemsOnTheWay;
+        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.totalAmountToTake = totalAmountToTake;
+        this.totalAmountToGive = totalAmountToGive;
+    }
 
     public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo, Integer orderStatus, List<String> itemsOnTheWay, boolean itemsOnTheWayVisible, Integer totalAmountToTake) {
         this._id = _id;
@@ -47,6 +73,14 @@ public class OrderItem {
         this.shopInfo = shopInfo;
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public Integer getTotalAmountToGive() {
+        return totalAmountToGive;
     }
 
     public Integer getTotalAmountToTake() {
