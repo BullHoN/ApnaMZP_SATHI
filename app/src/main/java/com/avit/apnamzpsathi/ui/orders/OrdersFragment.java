@@ -173,6 +173,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
+        binding.loading.setAnimation(R.raw.orders_loading);
+        binding.loading.playAnimation();
+
         Call<NetworkResponse> call = networkAPI.updateItemsOnTheWayPrice(orderId,totalCost);
         call.enqueue(new Callback<NetworkResponse>() {
             @Override
@@ -186,6 +189,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
 
                 Toasty.success(getContext(),"Update Successfull",Toasty.LENGTH_SHORT)
                         .show();
+
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.ordersFragment);
+                binding.loading.setVisibility(View.GONE);
             }
 
             @Override
@@ -203,6 +209,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
+        binding.loading.setAnimation(R.raw.orders_loading);
+        binding.loading.playAnimation();
+
         Call<NetworkResponse> call = networkAPI.cancelItemsOnTheWay(orderId);
         call.enqueue(new Callback<NetworkResponse>() {
             @Override
@@ -217,6 +226,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
 
                 Toasty.warning(getContext(),"Items On The Way Cancelled",Toasty.LENGTH_SHORT)
                         .show();
+
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.ordersFragment);
+                binding.loading.setVisibility(View.GONE);
             }
 
             @Override
