@@ -31,7 +31,7 @@ import es.dmoral.toasty.Toasty;
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdapterViewHolder>{
 
     public interface OrdersActions {
-        void updateOrderStatus(String orderId,Integer updatedStatus);
+        void updateOrderStatus(String orderId,Integer updatedStatus,int position);
         void updateItemsOnTheWayTotalCost(String orderId, String totalCost);
         void cancelItemsOnTheWay(String orderId);
     }
@@ -62,9 +62,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         OrderingItemsAdapter adapter = new OrderingItemsAdapter(curr.getOrderItems(),context);
         holder.orderingItemsList.setAdapter(adapter);
 
-        holder.totalAmountToGiveView.setText("Total Amount To Give: ₹" + curr.getTotalAmountToGive());
+        holder.totalAmountToGiveView.setText("Give To Shop: ₹" + curr.getTotalAmountToGive());
         if(!curr.isPaid()){
-            holder.totalAmountToTakeView.setText("Total Amount To Take: ₹" + curr.getTotalAmountToTake());
+            holder.totalAmountToTakeView.setText("Take From Customer: ₹" + curr.getTotalAmountToTake());
         }
         else {
             holder.totalAmountToTakeView.setText("Payment Done");
@@ -151,7 +151,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         holder.moreActionsMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showMenu(view,curr.get_id());
+                showMenu(view,curr.get_id(),curr);
             }
         });
 
@@ -166,12 +166,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         holder.nextActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                orderItems.remove(currPosition);
-                notifyDataSetChanged();
-                ordersActions.updateOrderStatus(curr.get_id(), curr.getOrderStatus()+1);
+                ordersActions.updateOrderStatus(curr.get_id(), curr.getOrderStatus()+1,currPosition);
             }
         });
 
+    }
+
+    public void removeOrderItem(int position){
+        orderItems.remove(position);
+        notifyDataSetChanged();
     }
 
     private void openGoogleMaps(String latitude,String longitude){
@@ -183,8 +186,21 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         context.startActivity(mapIntent);
     }
 
-    private void showMenu(View v,String order_id){
+    private void showMenu(View v,String order_id,OrderItem orderItem){
         PopupMenu popupMenu = new PopupMenu(context,v);
+        popupMenu.inflate(R.menu.menu_order);
+
+        if(orderItem.getItemsOnTheWay().size() == 0){
+            popupMenu.getMenu().getItem(1).setVisible(false);
+            popupMenu.getMenu().getItem(2).setVisible(false);
+        }
+        else if(orderItem.isItemsOnTheWayCancelled()){
+            popupMenu.getMenu().getItem(1).setVisible(false);
+            popupMenu.getMenu().getItem(2).setVisible(false);
+        }
+        else if(orderItem.getItemsOnTheWayActualCost() != 0){
+            popupMenu.getMenu().getItem(2).setVisible(false);
+        }
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -209,9 +225,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             }
         });
 
-        popupMenu.inflate(R.menu.menu_order);
         popupMenu.show();
-
     }
 
     private void addCostOfItemsOnTheWayDialog(String order_id){

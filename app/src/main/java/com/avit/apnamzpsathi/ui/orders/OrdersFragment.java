@@ -44,6 +44,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
     private OrderFragmentViewModel viewModel;
     private String TAG = "OrdersFragment";
     private DeliverySathi deliverySathi;
+    private OrdersAdapter ordersAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +73,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
         }
 
         binding.ordersList.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
-        OrdersAdapter ordersAdapter = new OrdersAdapter(new ArrayList<>(),getContext(),this);
+        ordersAdapter = new OrdersAdapter(new ArrayList<>(),getContext(),this);
         binding.ordersList.setAdapter(ordersAdapter);
 
         viewModel.getOrderItemMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<OrderItem>>() {
@@ -130,11 +131,14 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
     }
 
     @Override
-    public void updateOrderStatus(String orderId, Integer updatedStatus) {
+    public void updateOrderStatus(String orderId, Integer updatedStatus,int position) {
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
         Log.i(TAG, "updateOrderStatus: " + updatedStatus);
+
+        binding.loading.setAnimation(R.raw.orders_loading);
+        binding.loading.playAnimation();
 
         Call<NetworkResponse> call = networkAPI.updateOrderStatus(orderId,updatedStatus);
         call.enqueue(new Callback<NetworkResponse>() {
@@ -150,6 +154,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
 
                 Toasty.success(getContext(),"Order Updated",Toasty.LENGTH_SHORT)
                         .show();
+                ordersAdapter.removeOrderItem(position);
+
+                binding.loading.setVisibility(View.GONE);
             }
 
             @Override
@@ -219,5 +226,10 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }
