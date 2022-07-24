@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_earningFragment"
             app:destination="@id/earningFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_acceptOrderFragment"
+            app:destination="@id/acceptOrderFragment" />
     </fragment>
     <fragment
         android:id="@+id/ordersFragment"
@@ -27,4 +30,8 @@
         android:name="com.avit.apnamzpsathi.ui.earnings.EarningFragment"
         android:label="fragment_earning"
         tools:layout="@layout/fragment_earning" />
+    <fragment
+        android:id="@+id/acceptOrderFragment"
+        android:name="com.avit.apnamzpsathi.ui.acceptorder.AcceptOrderFragment"
+        android:label="AcceptOrderFragment" />
 </navigation>

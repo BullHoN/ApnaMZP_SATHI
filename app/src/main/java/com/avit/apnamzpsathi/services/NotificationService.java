@@ -53,25 +53,32 @@ public class NotificationService extends FirebaseMessagingService {
 
             String title = remoteMessage.getData().get("title");
             String desc = remoteMessage.getData().get("desc");
+            String data = remoteMessage.getData().get("data");
 
-            handleNotification(title,desc);
+            Log.i(TAG, "onMessageReceived: " + title);
+            Log.i(TAG, "onMessageReceived: " + desc);
+            Log.i(TAG, "onMessageReceived: " + data);
+
+            handleNotification(title,desc,data);
         }
 
     }
 
-    private void handleNotification(String title,String desc){
+    private void handleNotification(String title,String desc,String data){
 
         NotificationUtils.playSound(getApplicationContext());
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("new_order",true);
 
         intent.setAction("com.avit.apnamzp_sathi.NEW_ORDER_NOTIFICATION");
 
         SharedPreferences sf = getApplicationContext().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sf.edit();
 
+        editor.putString("new_order_data",data);
         editor.putBoolean("new_order_arrived",true);
         editor.apply();
 

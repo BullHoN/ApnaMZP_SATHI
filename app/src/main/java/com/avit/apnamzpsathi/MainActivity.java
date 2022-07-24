@@ -81,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
         FirebaseCrashlytics.getInstance().setUserId(LocalDB.getDeliverySathiDetails(getApplicationContext()).getPhoneNo());
 
         if(getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals("com.avit.apnamzp_sathi.NEW_ORDER_NOTIFICATION")){
-            openOrdersFragment();
-            SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
-            SharedPreferences.Editor editor = sf.edit();
-
-            editor.putBoolean("new_order_arrived",false);
-            editor.apply();
+            openAcceptOrderFragment();
+//            SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sf.edit();
+//
+//            editor.putBoolean("new_order_arrived",false);
+//            editor.apply();
         }
 
         FirebaseMessaging.getInstance().getToken()
@@ -125,17 +125,17 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(broadCastAction)){
                     Log.i(TAG, "onReceive: ");
-                    openOrdersFragment();
+                    openAcceptOrderFragment();
                 }
             }
         };
 
     }
 
-    private void openOrdersFragment(){
+    private void openAcceptOrderFragment(){
         Bundle bundle = new Bundle();
         bundle.putBoolean("new_order_notification",true);
-        navController.navigate(R.id.ordersFragment,bundle);
+        navController.navigate(R.id.acceptOrderFragment);
     }
 
     private void sendFcmIdToServer(DeliverySathi deliverySathi){
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
 
         if(newOrderArrived){
-            openOrdersFragment();
+            openAcceptOrderFragment();
         }
 
 //        registerReceiver(receiver,intentFilter);

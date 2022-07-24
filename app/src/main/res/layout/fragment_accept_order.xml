@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:fillViewport="true"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.order_notification.OrderNotification">
+
+        <LinearLayout
+            android:padding="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_marginTop="24dp"
+                android:textSize="22sp"
+                android:fontFamily="@font/roboto_bold"
+                android:layout_gravity="center"
+                android:text="Order Details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true" >
+
+                <LinearLayout
+                    android:padding="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/shop_name"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/white"
+                        android:text="Shop Name: Up63 Cafe"
+                        android:background="@color/primaryColor"
+                        android:padding="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/shop_phoneNo"
+                        android:layout_marginTop="8dp"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/white"
+                        android:text="Phone No: 1234567890"
+                        android:background="@color/primaryColor"
+                        android:padding="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/shop_address"
+                        android:layout_marginTop="8dp"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/white"
+                        android:text="address"
+                        android:background="@color/primaryColor"
+                        android:padding="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/remaining_time_progress_bar"
+                android:layout_marginTop="24dp"
+                android:layout_gravity="center"
+                app:indicatorSize="100dp"
+                app:trackThickness="50dp"
+                android:layout_width="wrap_content"
+                android:indeterminate="false"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/remaining_time"
+                android:layout_gravity="center"
+                android:text="Perform Action Within 5 Minutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/accept_order_button"
+                android:background="@color/success"
+                android:layout_marginTop="12dp"
+                android:paddingVertical="8dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="Accept Order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/reject_order_button"
+                android:background="@color/errorColor"
+                android:layout_marginTop="12dp"
+                android:paddingVertical="8dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="Reject Order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>
