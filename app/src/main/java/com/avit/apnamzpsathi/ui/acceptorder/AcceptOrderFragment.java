@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.avit.apnamzpsathi.model.UserInfo;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.utils.ErrorUtils;
+import com.avit.apnamzpsathi.utils.NotificationUtils;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.gson.Gson;
 
@@ -96,6 +98,7 @@ public class AcceptOrderFragment extends Fragment {
         binding.acceptOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                NotificationUtils.stopSound();
                 acceptOrder();
             }
         });
@@ -103,14 +106,27 @@ public class AcceptOrderFragment extends Fragment {
         binding.rejectOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                NotificationUtils.stopSound();
                 rejectOrder("Delivery Sathi Rejected");
             }
         });
 
+        removeNewSathi();
+
         return binding.getRoot();
     }
 
+    private void removeNewSathi(){
+        SharedPreferences sf = getActivity().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sf.edit();
+
+        editor.putBoolean("new_order_arrived",false);
+        editor.apply();
+    }
+
     private void acceptOrder() {
+        cancelOrderTimer.cancel();
+
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
@@ -126,6 +142,7 @@ public class AcceptOrderFragment extends Fragment {
                 }
 
                 NetworkResponse successResponse = response.body();
+                openOrdersFragment();
                 if(successResponse.isSuccess()){
                     Toasty.success(getContext(),"Order Accepted",Toasty.LENGTH_SHORT)
                             .show();
@@ -140,7 +157,14 @@ public class AcceptOrderFragment extends Fragment {
         });
     }
 
+    private void openOrdersFragment(){
+        Navigation.findNavController(binding.getRoot()).popBackStack();
+    }
+
     private void rejectOrder(String reason) {
+
+        cancelOrderTimer.cancel();
+
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
@@ -156,6 +180,7 @@ public class AcceptOrderFragment extends Fragment {
                 }
 
                 NetworkResponse successResponse = response.body();
+                openOrdersFragment();
                 if(successResponse.isSuccess()){
                     Toasty.success(getContext(),"Order Accepted",Toasty.LENGTH_SHORT)
                             .show();
