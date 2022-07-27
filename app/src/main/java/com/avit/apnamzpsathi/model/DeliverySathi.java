@@ -8,6 +8,7 @@ public class DeliverySathi {
     private int earnings;
     private int incentives;
     private int deliveries;
+    private String orderId;
 
     public DeliverySathi(String phoneNo, String latitude, String longitude) {
         this.phoneNo = phoneNo;
@@ -20,6 +21,14 @@ public class DeliverySathi {
         this.earnings = earnings;
         this.incentives = incentives;
         this.deliveries = deliveries;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getOrderId() {
+        return orderId;
     }
 
     public int getEarnings() {

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.airbnb.lottie.L;
 import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.databinding.FragmentAcceptOrderBinding;
 import com.avit.apnamzpsathi.db.LocalDB;
@@ -26,6 +28,7 @@ import com.avit.apnamzpsathi.model.OrderItem;
 import com.avit.apnamzpsathi.model.UserInfo;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
+import com.avit.apnamzpsathi.ui.orders.OrderingItemsAdapter;
 import com.avit.apnamzpsathi.utils.ErrorUtils;
 import com.avit.apnamzpsathi.utils.NotificationUtils;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -75,6 +78,19 @@ public class AcceptOrderFragment extends Fragment {
 
         waitTimeProgressBar.setMax(60 * 5);
 
+        if(orderItem.isAdminShopService()){
+            binding.directOrderContainer.setVisibility(View.VISIBLE);
+            binding.alertAnimation.setAnimation(R.raw.alert_animation);
+            binding.alertAnimation.playAnimation();
+
+            binding.orderItemsContainer.setVisibility(View.VISIBLE);
+            binding.orderItems.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+
+            OrderingItemsAdapter orderingItemsAdapter = new OrderingItemsAdapter(orderItem.getOrderItems(),getContext());
+            binding.orderItems.setAdapter(orderingItemsAdapter);
+
+        }
+
         cancelOrderTimer = new CountDownTimer(waitTime,waitTime/(5*60)) {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -113,6 +129,8 @@ public class AcceptOrderFragment extends Fragment {
 
         removeNewSathi();
 
+
+
         return binding.getRoot();
     }
 
@@ -121,6 +139,8 @@ public class AcceptOrderFragment extends Fragment {
         SharedPreferences.Editor editor = sf.edit();
 
         editor.putBoolean("new_order_arrived",false);
+        // TODO: remove the new order data from here and when completed
+//        editor.remove("new_order_data");
         editor.apply();
     }
 

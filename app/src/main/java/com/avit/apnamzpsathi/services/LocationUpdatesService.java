@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
@@ -17,7 +18,9 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.avit.apnamzpsathi.db.LocalDB;
+import com.avit.apnamzpsathi.db.SharedPrefNames;
 import com.avit.apnamzpsathi.model.DeliverySathi;
+import com.avit.apnamzpsathi.model.OrderItem;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.receivers.RestartBackgroundService;
@@ -26,6 +29,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -40,6 +44,7 @@ public class LocationUpdatesService extends Service {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
     private DeliverySathi deliverySathi;
+    private Gson gson;
 
     public LocationUpdatesService() {
     }
@@ -76,9 +81,19 @@ public class LocationUpdatesService extends Service {
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
+        SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
+        gson = new Gson();
+
         deliverySathi = LocalDB.getDeliverySathiDetails(getApplicationContext());
         deliverySathi.setLatitude(latitude);
         deliverySathi.setLongitude(longitude);
+
+        Log.i(TAG, "sendLocationUpdates: " + sf.contains("new_order_data"));
+        if(sf.contains("new_order_data")){
+            OrderItem orderItem = gson.fromJson(sf.getString("new_order_data","{}"),OrderItem.class);
+            deliverySathi.setOrderId(orderItem.get_id());
+        }
+
 
         Call<ResponseBody> call = networkAPI.sendLocationUpdates(deliverySathi,null);
         call.enqueue(new Callback<ResponseBody>() {
