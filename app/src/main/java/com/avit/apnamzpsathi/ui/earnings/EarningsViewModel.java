@@ -29,11 +29,11 @@ public class EarningsViewModel extends ViewModel {
         return mutableLiveData;
     }
 
-    public void getDeliverySathiInfo(Context context, String deliverySathi, String ordersDateString){
+    public void getDeliverySathiInfo(Context context, String deliverySathi, String ordersDateString, boolean isMonthly){
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
-        Call<DeliverySathiDayInfo> call = networkAPI.getDeliverySaathiDayInfo(deliverySathi,ordersDateString);
+        Call<DeliverySathiDayInfo> call = networkAPI.getDeliverySaathiDayInfo(deliverySathi,ordersDateString,isMonthly);
         call.enqueue(new Callback<DeliverySathiDayInfo>() {
             @Override
             public void onResponse(Call<DeliverySathiDayInfo> call, Response<DeliverySathiDayInfo> response) {

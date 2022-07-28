@@ -218,7 +218,7 @@ public class HomeFragment extends Fragment {
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
-        Call<DeliverySathiDayInfo> call = networkAPI.getDeliverySaathiDayInfo(deliverySathi,simpleDateFormat.format(todayDate));
+        Call<DeliverySathiDayInfo> call = networkAPI.getDeliverySaathiDayInfo(deliverySathi,simpleDateFormat.format(todayDate),false);
         call.enqueue(new Callback<DeliverySathiDayInfo>() {
             @Override
             public void onResponse(Call<DeliverySathiDayInfo> call, Response<DeliverySathiDayInfo> response) {

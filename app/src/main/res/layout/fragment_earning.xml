@@ -43,6 +43,32 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
+            <com.google.android.material.chip.ChipGroup
+                android:paddingHorizontal="12dp"
+                android:id="@+id/orders_filter"
+                app:singleLine="true"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                app:chipSpacingHorizontal="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/daily_filter"
+                    android:text="Daily"
+                    android:checked="true"
+                    style="@style/My_Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/monthly_filter"
+                    android:text="Monthly"
+                    style="@style/My_Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.chip.ChipGroup>
 
             <CalendarView
                 android:id="@+id/calenderView"

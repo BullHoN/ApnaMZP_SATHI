@@ -20,6 +20,7 @@ import com.avit.apnamzpsathi.databinding.FragmentEarningBinding;
 import com.avit.apnamzpsathi.db.LocalDB;
 import com.avit.apnamzpsathi.model.DeliverySathiDayInfo;
 import com.avit.apnamzpsathi.utils.PrettyStrings;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
@@ -33,6 +34,7 @@ public class EarningFragment extends Fragment {
     private EarningsViewModel viewModel;
     private String deliverySathi;
     private String TAG = "EarningFragment";
+    private String selectedDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,12 +65,13 @@ public class EarningFragment extends Fragment {
 
         Date todayDate = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        selectedDate = simpleDateFormat.format(todayDate);
 
         binding.detailsOnDate.setText("Details For " + simpleDateFormat.format(todayDate));
 
         deliverySathi = LocalDB.getDeliverySathiDetails(getContext()).getPhoneNo();
 
-        viewModel.getDeliverySathiInfo(getContext(),deliverySathi,simpleDateFormat.format(todayDate));
+        viewModel.getDeliverySathiInfo(getContext(),deliverySathi,simpleDateFormat.format(todayDate),false);
 
         binding.calenderView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -83,9 +86,10 @@ public class EarningFragment extends Fragment {
                 }
 
                 String dateString = year + "-" + monthString + "-" + dateOfMonthString;
+                selectedDate = dateString;
 
                 binding.detailsOnDate.setText("Details For " + dateString);
-                viewModel.getDeliverySathiInfo(getContext(),deliverySathi,dateString);
+                viewModel.getDeliverySathiInfo(getContext(),deliverySathi,dateString,false);
 
             }
         });
@@ -95,11 +99,27 @@ public class EarningFragment extends Fragment {
             public void onChanged(DeliverySathiDayInfo deliverySathiDayInfo) {
                 Log.i(TAG, "onChanged: " + deliverySathiDayInfo.getTotalEarnings() + " " + deliverySathiDayInfo.getNoOfOrders());
 
+                if(deliverySathiDayInfo.isMonthly()){
+                    binding.detailsOnDate.setText("Details For Whole Month");
+                }
+
                 binding.totalEarnings.setText("₹" + deliverySathiDayInfo.getTotalEarnings());
                 binding.totalOrders.setText(String.valueOf(deliverySathiDayInfo.getNoOfOrders()));
                 binding.ordersEarning.setText(PrettyStrings.getPriceInRupees(deliverySathiDayInfo.getEarnings()));
                 binding.totalIncentive.setText(PrettyStrings.getPriceInRupees(deliverySathiDayInfo.getIncentives()));
 
+            }
+        });
+
+        binding.ordersFilter.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                if(R.id.daily_filter == checkedId){
+
+                }
+                else if(R.id.monthly_filter == checkedId){
+                    viewModel.getDeliverySathiInfo(getContext(),deliverySathi, selectedDate, true);
+                }
             }
         });
 
