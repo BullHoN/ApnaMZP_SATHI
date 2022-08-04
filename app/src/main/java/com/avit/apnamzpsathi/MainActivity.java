@@ -104,13 +104,13 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.i(TAG, "onComplete: " + deliverySathi.getFcmId() + "\n" + token);
 
-                        if(deliverySathi.getFcmId() == null || !deliverySathi.getFcmId().equals(token)){
+//                        if(deliverySathi.getFcmId() == null || !deliverySathi.getFcmId().equals(token)){
 
                             deliverySathi.setFcmId(token);
                             LocalDB.saveSathiDetails(getApplicationContext(),deliverySathi);
 
                             sendFcmIdToServer(deliverySathi);
-                        }
+//                        }
 
                     }
                 });

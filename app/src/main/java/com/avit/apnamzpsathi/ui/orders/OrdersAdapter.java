@@ -207,9 +207,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             public boolean onMenuItemClick(MenuItem menuItem) {
 
                 switch (menuItem.getItemId()){
-                    case R.id.transfer_order:
-                        // TODO: call prakhar
-                        return true;
                     case R.id.cancel_items_on_the_way:
                         // TODO: Cancel Items On The Way
                         ordersActions.cancelItemsOnTheWay(order_id);

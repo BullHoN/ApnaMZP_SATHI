@@ -19,8 +19,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface NetworkAPI {
-    String SERVER_URL = "http://192.168.63.85:5000/";
-//    String SERVER_URL = "https://bd4a-2409-4063-2109-67d5-38dc-6602-cf16-7f07.ngrok.io";
+    String SERVER_URL = "http://192.168.138.85:5000/";
+//    String SERVER_URL = "https://038c-2409-4063-4c0b-2aac-50bd-e974-a393-9d26.ngrok.io";
 
     @GET("/getDeliveryPriceInfoSathi")
     Call<List<DeliveryInfoData>> getDeliveryPricingInfo();

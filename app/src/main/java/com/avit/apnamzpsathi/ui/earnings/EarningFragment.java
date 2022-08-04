@@ -27,7 +27,6 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 public class EarningFragment extends Fragment {
 
     private FragmentEarningBinding binding;
