@@ -58,6 +58,16 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            android:id="@+id/expectedIncome"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Expected Income: $20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
             android:id="@+id/totalAmountToGive"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"

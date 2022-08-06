@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.model.OrderItem;
+import com.avit.apnamzpsathi.utils.PrettyStrings;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -84,6 +85,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
 
         holder.shopPhoneNo.setText("Phone No: " + curr.getShopInfo().getPhoneNo());
 
+        holder.expectedIncome.setText("Expected Income "+ PrettyStrings.getPriceInRupees(curr.getDeliverySathiIncome()));
 
         holder.customerName.setText("Name: " + curr.getUserInfo().getName());
         holder.customerAddress.setText("Address: " + curr.getUserInfo().getRawAddress());
@@ -275,7 +277,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         public RecyclerView itemsOnTheWayRecyclerView;
         public MaterialButton nextActionButton;
         public ImageButton moreActionsMenuButton;
-        public TextView totalAmountToTakeView, totalAmountToGiveView;
+        public TextView totalAmountToTakeView, totalAmountToGiveView, expectedIncome;
         public LinearLayout customerAddressContainer, shopAddressContainer;
 
         public OrdersAdapterViewHolder(@NonNull View itemView) {
@@ -306,6 +308,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
 
             customerAddressContainer = itemView.findViewById(R.id.customer_address_container);
             shopAddressContainer = itemView.findViewById(R.id.shop_address_container);
+
+            expectedIncome = itemView.findViewById(R.id.expectedIncome);
 
         }
     }
