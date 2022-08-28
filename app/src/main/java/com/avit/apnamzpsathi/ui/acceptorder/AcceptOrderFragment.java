@@ -1,7 +1,9 @@
 package com.avit.apnamzpsathi.ui.acceptorder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -69,7 +71,27 @@ public class AcceptOrderFragment extends Fragment {
 
         binding.shopName.setText("Shop Name: " + orderItem.getShopInfo().getName());
         binding.shopPhoneNo.setText("Phone No: " + orderItem.getShopInfo().getPhoneNo());
+
+        binding.shopPhoneNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String phoneNo = orderItem.getShopInfo().getPhoneNo();
+                Intent callingIntent = new Intent();
+                callingIntent.setAction(Intent.ACTION_DIAL);
+                callingIntent.setData(Uri.parse("tel: " + phoneNo));
+                startActivity(callingIntent);
+            }
+        });
+
         binding.shopAddress.setText("Address: " + orderItem.getShopInfo().getRawAddress());
+
+        binding.shopAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGoogleMaps(orderItem.getShopInfo().getLatitude(),orderItem.getShopInfo().getLongitude());
+            }
+        });
+
 
         waitTimeProgressBar = binding.remainingTimeProgressBar;
         reamingTimeTextview = binding.remainingTime;
@@ -132,6 +154,15 @@ public class AcceptOrderFragment extends Fragment {
 
 
         return binding.getRoot();
+    }
+
+    private void openGoogleMaps(String latitude,String longitude){
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude+","+longitude);
+
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        startActivity(mapIntent);
     }
 
     private void removeNewSathi(){

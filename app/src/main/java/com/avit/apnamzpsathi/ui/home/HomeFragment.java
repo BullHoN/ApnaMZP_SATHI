@@ -253,7 +253,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if(multiplePermissionsReport.areAllPermissionsGranted()){
-                            displayLocationSettingsRequest(getContext());
+//                            displayLocationSettingsRequest(getContext());
                             Log.i(TAG, "onPermissionsChecked: ");
                         }
 

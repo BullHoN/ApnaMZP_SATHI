@@ -19,6 +19,10 @@ public class OrderItem {
     private boolean adminShopService;
     private int deliverySathiIncome;
 
+    public OrderItem(){
+        this.itemsOnTheWayVisible = true;
+    }
+
     public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo, Integer orderStatus, List<String> itemsOnTheWay, boolean itemsOnTheWayVisible, Integer totalAmountToTake, Integer totalAmountToGive, boolean isPaid, boolean itemsOnTheWayCancelled, int itemsOnTheWayActualCost, boolean orderAcceptedByDeliverySathi, boolean adminShopService, int deliverySathiIncome) {
         this._id = _id;
         this.orderItems = orderItems;
@@ -26,7 +30,7 @@ public class OrderItem {
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
         this.itemsOnTheWay = itemsOnTheWay;
-        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.itemsOnTheWayVisible = true;
         this.totalAmountToTake = totalAmountToTake;
         this.totalAmountToGive = totalAmountToGive;
         this.isPaid = isPaid;
@@ -44,7 +48,7 @@ public class OrderItem {
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
         this.itemsOnTheWay = itemsOnTheWay;
-        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.itemsOnTheWayVisible = true;
         this.totalAmountToTake = totalAmountToTake;
         this.totalAmountToGive = totalAmountToGive;
         this.isPaid = isPaid;
@@ -61,7 +65,7 @@ public class OrderItem {
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
         this.itemsOnTheWay = itemsOnTheWay;
-        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.itemsOnTheWayVisible = true;
         this.totalAmountToTake = totalAmountToTake;
         this.totalAmountToGive = totalAmountToGive;
         this.isPaid = isPaid;
@@ -77,7 +81,7 @@ public class OrderItem {
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
         this.itemsOnTheWay = itemsOnTheWay;
-        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.itemsOnTheWayVisible = true;
         this.totalAmountToTake = totalAmountToTake;
         this.totalAmountToGive = totalAmountToGive;
         this.isPaid = isPaid;
@@ -92,7 +96,7 @@ public class OrderItem {
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
         this.itemsOnTheWay = itemsOnTheWay;
-        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.itemsOnTheWayVisible = true;
         this.totalAmountToTake = totalAmountToTake;
         this.totalAmountToGive = totalAmountToGive;
         this.isPaid = isPaid;
@@ -106,7 +110,7 @@ public class OrderItem {
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
         this.itemsOnTheWay = itemsOnTheWay;
-        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.itemsOnTheWayVisible = true;
         this.totalAmountToTake = totalAmountToTake;
         this.totalAmountToGive = totalAmountToGive;
         this.isPaid = isPaid;
@@ -119,7 +123,7 @@ public class OrderItem {
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
         this.itemsOnTheWay = itemsOnTheWay;
-        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.itemsOnTheWayVisible = true;
         this.totalAmountToTake = totalAmountToTake;
         this.totalAmountToGive = totalAmountToGive;
     }
@@ -131,7 +135,7 @@ public class OrderItem {
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
         this.itemsOnTheWay = itemsOnTheWay;
-        this.itemsOnTheWayVisible = itemsOnTheWayVisible;
+        this.itemsOnTheWayVisible = true;
         this.totalAmountToTake = totalAmountToTake;
     }
 
@@ -142,7 +146,7 @@ public class OrderItem {
         this.userInfo = userInfo;
         this.orderStatus = orderStatus;
         this.itemsOnTheWay = itemsOnTheWay;
-        this.itemsOnTheWayVisible = false;
+        this.itemsOnTheWayVisible = true;
     }
 
     public OrderItem(String _id, List<ShopItemData> orderItems, UserInfo shopInfo, UserInfo userInfo) {

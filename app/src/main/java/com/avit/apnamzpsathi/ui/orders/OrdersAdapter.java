@@ -210,11 +210,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
 
                 switch (menuItem.getItemId()){
                     case R.id.cancel_items_on_the_way:
-                        // TODO: Cancel Items On The Way
+                        // Cancel Items On The Way
                         ordersActions.cancelItemsOnTheWay(order_id);
                         return true;
                     case R.id.add_cost_of_items_on_the_way:
-                        // TODO: Add Cost Of Items On The Way
+                        // Add Cost Of Items On The Way
                         addCostOfItemsOnTheWayDialog(order_id);
                         return true;
                     default:
