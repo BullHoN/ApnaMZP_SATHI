@@ -84,6 +84,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         });
 
         holder.shopPhoneNo.setText("Phone No: " + curr.getShopInfo().getPhoneNo());
+        holder.shopPhoneNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                call(curr.getShopInfo().getPhoneNo());
+            }
+        });
 
         holder.expectedIncome.setText("Expected Income "+ PrettyStrings.getPriceInRupees(curr.getDeliverySathiIncome()));
 
@@ -98,6 +104,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         });
 
         holder.customerPhoneNo.setText("PhoneNo: " + curr.getUserInfo().getPhoneNo());
+        holder.customerPhoneNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                call(curr.getUserInfo().getPhoneNo());
+            }
+        });
 
         holder.customerDetailsToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +184,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             }
         });
 
+    }
+
+    private void call(String phoneNo){
+        Intent callingIntent = new Intent();
+        callingIntent.setAction(Intent.ACTION_DIAL);
+        callingIntent.setData(Uri.parse("tel: " + phoneNo));
+        context.startActivity(callingIntent);
     }
 
     public void removeOrderItem(int position){

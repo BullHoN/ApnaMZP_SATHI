@@ -76,10 +76,7 @@ public class AcceptOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String phoneNo = orderItem.getShopInfo().getPhoneNo();
-                Intent callingIntent = new Intent();
-                callingIntent.setAction(Intent.ACTION_DIAL);
-                callingIntent.setData(Uri.parse("tel: " + phoneNo));
-                startActivity(callingIntent);
+                call(phoneNo);
             }
         });
 
@@ -154,6 +151,13 @@ public class AcceptOrderFragment extends Fragment {
 
 
         return binding.getRoot();
+    }
+
+    private void call(String phoneNo){
+        Intent callingIntent = new Intent();
+        callingIntent.setAction(Intent.ACTION_DIAL);
+        callingIntent.setData(Uri.parse("tel: " + phoneNo));
+        startActivity(callingIntent);
     }
 
     private void openGoogleMaps(String latitude,String longitude){
