@@ -203,6 +203,46 @@
 
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/customer_landmark_container"
+                            android:background="@color/primaryColor"
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:fontFamily="@font/roboto_bold"
+                                android:textColor="@color/white"
+                                android:id="@+id/customer_landmark"
+                                android:text="Landmarjk"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/customer_houseNo_container"
+                            android:background="@color/primaryColor"
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:fontFamily="@font/roboto_bold"
+                                android:textColor="@color/white"
+                                android:id="@+id/customer_houseNo"
+                                android:text="House No"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
                 </LinearLayout>

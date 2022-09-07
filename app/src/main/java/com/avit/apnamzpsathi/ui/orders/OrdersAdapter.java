@@ -103,6 +103,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             }
         });
 
+        if(curr.getUserInfo().getLandmark() != null && curr.getUserInfo().getLandmark().length() != 0){
+            holder.customerLandmarkContainer.setVisibility(View.VISIBLE);
+            holder.customerLandmark.setText("Landmark: " + curr.getUserInfo().getLandmark());
+        }
+
+        if(curr.getUserInfo().getHouseNo() != null && curr.getUserInfo().getHouseNo().length() != 0){
+            holder.customerHouseContainer.setVisibility(View.VISIBLE);
+            holder.customerHouseNo.setText("House No : " + curr.getUserInfo().getHouseNo());
+        }
+
         holder.customerPhoneNo.setText("PhoneNo: " + curr.getUserInfo().getPhoneNo());
         holder.customerPhoneNo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,9 +298,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
     public class OrdersAdapterViewHolder extends RecyclerView.ViewHolder {
 
         public RecyclerView orderingItemsList;
-        public TextView orderId,customerName,customerPhoneNo,customerAddress;
+        public TextView orderId,customerName,customerPhoneNo,customerAddress, customerLandmark, customerHouseNo;
         public TextView shopName,shopPhoneNo,shopAddress;
         public LinearLayout customerDetailsToggleButton, expandableCustomerDetailsView;
+        public LinearLayout customerHouseContainer, customerLandmarkContainer;
         public LinearLayout shopDetailsToggleButton, expandableShopDetailsView;
         public LinearLayout itemsOnTheWayToggleButton, expandableItemsOnTheWayDetailsView;
         public RecyclerView itemsOnTheWayRecyclerView;
@@ -306,6 +317,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             customerName = itemView.findViewById(R.id.customer_name);
             customerPhoneNo = itemView.findViewById(R.id.customer_phoneNo);
             customerAddress = itemView.findViewById(R.id.customer_address);
+            customerLandmark = itemView.findViewById(R.id.customer_landmark);
+            customerLandmarkContainer = itemView.findViewById(R.id.customer_landmark_container);
+            customerHouseContainer = itemView.findViewById(R.id.customer_houseNo_container);
+            customerHouseNo = itemView.findViewById(R.id.customer_houseNo);
             customerDetailsToggleButton = itemView.findViewById(R.id.customer_toggle_button);
             expandableCustomerDetailsView = itemView.findViewById(R.id.expandable_customer_details);
 

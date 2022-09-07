@@ -6,7 +6,21 @@ public class UserInfo {
     private String longitude;
     private String phoneNo;
     private String rawAddress;
+    private String landmark;
+    private String houseNo;
     private boolean isVissible;
+
+    public UserInfo(String name, String latitude, String longitude, String phoneNo,
+                    String rawAddress, String landmark, String houseNo, boolean isVissible) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.phoneNo = phoneNo;
+        this.rawAddress = rawAddress;
+        this.landmark = landmark;
+        this.houseNo = houseNo;
+        this.isVissible = isVissible;
+    }
 
     public UserInfo(String name, String latitude, String longitude, String phoneNo, String rawAddress) {
         this.name = name;
@@ -15,6 +29,14 @@ public class UserInfo {
         this.phoneNo = phoneNo;
         this.rawAddress = rawAddress;
         this.isVissible = false;
+    }
+
+    public String getLandmark() {
+        return landmark;
+    }
+
+    public String getHouseNo() {
+        return houseNo;
     }
 
     public boolean isVissible() {
