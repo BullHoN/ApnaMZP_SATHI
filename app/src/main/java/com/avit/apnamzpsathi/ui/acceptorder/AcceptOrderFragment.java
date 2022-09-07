@@ -67,7 +67,12 @@ public class AcceptOrderFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME, Context.MODE_PRIVATE);
         gson = new Gson();
 
-        orderItem = gson.fromJson(sharedPreferences.getString("new_order_data","{}"),OrderItem.class);
+        if(getArguments().getString("new_order_data") != null){
+            orderItem = gson.fromJson(getArguments().getString("new_order_data"),OrderItem.class);
+        }else {
+            orderItem = gson.fromJson(sharedPreferences.getString("new_order_data","{}"),OrderItem.class);
+        }
+
 
         binding.shopName.setText("Shop Name: " + orderItem.getShopInfo().getName());
         binding.shopPhoneNo.setText("Phone No: " + orderItem.getShopInfo().getPhoneNo());

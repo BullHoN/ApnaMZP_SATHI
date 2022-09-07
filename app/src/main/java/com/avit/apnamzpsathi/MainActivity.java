@@ -18,12 +18,14 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import com.avit.apnamzpsathi.db.LocalDB;
 import com.avit.apnamzpsathi.db.SharedPrefNames;
 import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.model.NetworkResponse;
+import com.avit.apnamzpsathi.model.OrderItem;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.services.LocationBroadCastReceiver;
@@ -44,6 +46,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver receiver;
     private IntentFilter intentFilter;
     private String broadCastAction = "com.avit.apnamzp_sathi.NEW_ORDER_SATHI_NOTIFICATION";
+    private Gson gson;
 
 
     @Override
@@ -77,17 +81,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         navController = Navigation.findNavController(this,R.id.nav_host_fragment_container);
+        gson = new Gson();
 
         FirebaseCrashlytics.getInstance().setUserId(LocalDB.getDeliverySathiDetails(getApplicationContext()).getPhoneNo());
-
-        if(getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals("com.avit.apnamzp_sathi.NEW_ORDER_NOTIFICATION")){
-            openAcceptOrderFragment();
-//            SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
-//            SharedPreferences.Editor editor = sf.edit();
-//
-//            editor.putBoolean("new_order_arrived",false);
-//            editor.apply();
-        }
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -98,44 +94,41 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         String token = task.getResult();
-                        Log.i("NotificationService", "onComplete: " + token);
 
                         DeliverySathi deliverySathi = LocalDB.getDeliverySathiDetails(getApplicationContext());
-
-                        Log.i(TAG, "onComplete: " + deliverySathi.getFcmId() + "\n" + token);
-
-//                        if(deliverySathi.getFcmId() == null || !deliverySathi.getFcmId().equals(token)){
-
-                            deliverySathi.setFcmId(token);
-                            LocalDB.saveSathiDetails(getApplicationContext(),deliverySathi);
-
-                            sendFcmIdToServer(deliverySathi);
-//                        }
-
+                        deliverySathi.setFcmId(token);
+                        LocalDB.saveSathiDetails(getApplicationContext(),deliverySathi);
+                        sendFcmIdToServer(deliverySathi);
                     }
                 });
 
+        if(getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals("com.avit.apnamzp_sathi.NEW_ORDER_NOTIFICATION")){
+            openAcceptOrderFragment(null);
+//            SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sf.edit();
+//
+//            editor.putBoolean("new_order_arrived",false);
+//            editor.apply();
+        }
         // Broadcast receiver
 
-        intentFilter = new IntentFilter();
-        intentFilter.addAction(broadCastAction);
-
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(broadCastAction)){
-                    Log.i(TAG, "onReceive: ");
-                    openAcceptOrderFragment();
-                }
-            }
-        };
+//        intentFilter = new IntentFilter();
+//        intentFilter.addAction(broadCastAction);
+//
+//        receiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                if(intent.getAction().equals(broadCastAction)){
+//                    Log.i(TAG, "onReceive: ");
+//                    openAcceptOrderFragment();
+//                }
+//            }
+//        };
 
     }
 
-    private void openAcceptOrderFragment(){
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("new_order_notification",true);
-        navController.navigate(R.id.acceptOrderFragment);
+    private void openAcceptOrderFragment(Bundle bundle){
+        navController.navigate(R.id.acceptOrderFragment,bundle);
     }
 
     private void sendFcmIdToServer(DeliverySathi deliverySathi){
@@ -170,25 +163,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sf.edit();
-
-        Log.i(TAG, "onResume: " + sf.getBoolean("new_order_arrived",false));
-
-        if(!sf.contains("new_order_arrived")){
-            return;
-        }
-
-        boolean newOrderArrived = sf.getBoolean("new_order_arrived",false);
-        if(!newOrderArrived){
-            return;
-        }
-        editor.putBoolean("new_order_arrived",!newOrderArrived);
-        editor.apply();
-
-        if(newOrderArrived){
-            openAcceptOrderFragment();
-        }
+//        SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sf.edit();
+//
+//        Log.i(TAG, "onResume: " + sf.getBoolean("new_order_arrived",false));
+//
+//        if(!sf.contains("new_order_arrived")){
+//            return;
+//        }
+//
+//        boolean newOrderArrived = sf.getBoolean("new_order_arrived",false);
+//        if(!newOrderArrived){
+//            return;
+//        }
+//        editor.putBoolean("new_order_arrived",!newOrderArrived);
+//        editor.apply();
+//
+//        if(newOrderArrived){
+//            openAcceptOrderFragment(null);
+//        }
 
 //        registerReceiver(receiver,intentFilter);
     }

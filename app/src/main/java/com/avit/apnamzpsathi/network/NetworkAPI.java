@@ -19,8 +19,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface NetworkAPI {
-//    String SERVER_URL = "http://192.168.48.85:5000";
-    String SERVER_URL = "https://apnamzp.in/";
+    String SERVER_URL = "http://192.168.133.85:5000";
+//    String SERVER_URL = "https://apnamzp.in/";
 
     @GET("/getDeliveryPriceInfoSathi")
     Call<List<DeliveryInfoData>> getDeliveryPricingInfo();
@@ -61,5 +61,7 @@ public interface NetworkAPI {
     @POST("/sathi/rejectOrder")
     Call<NetworkResponse> rejectOrder(@Query("orderId") String orderId, @Query("deliverySathiNo") String deliverySathiNo, @Query("cancelReason") String cancelReason);
 
+    @GET("/sathi/{phoneNo}/not-responded-orders")
+    Call<List<OrderItem>> getNotRespondedOrders(@Path("phoneNo") String sathiPhoneNo);
 
 }

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -21,7 +23,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.CountDownTimer;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +42,7 @@ import com.avit.apnamzpsathi.model.DeliveryInfoData;
 import com.avit.apnamzpsathi.model.DeliverySathi;
 import com.avit.apnamzpsathi.model.DeliverySathiDayInfo;
 import com.avit.apnamzpsathi.model.NetworkResponse;
+import com.avit.apnamzpsathi.model.OrderItem;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.services.LocationBroadCastReceiver;
@@ -56,6 +61,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -69,6 +75,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 import okhttp3.ResponseBody;
@@ -86,6 +93,7 @@ public class HomeFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     private Intent backgroundLocationUpdatesService;
+    private Gson gson;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,10 +101,12 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater,container,false);
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
+        gson = new Gson();
 
         viewModel.getDataFromServer(getContext());
         viewModel.getIncentiveDataFromServer(getContext());
+
+        getScreenOverlayPermission();
 
         getCashInHand();
         getTodayDayInfo();
@@ -172,6 +182,75 @@ public class HomeFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void getScreenOverlayPermission(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(!Settings.canDrawOverlays(getContext())){
+                if ("xiaomi".equals(Build.MANUFACTURER.toLowerCase(Locale.ROOT))) {
+                    final Intent intent =new Intent("miui.intent.action.APP_PERM_EDITOR");
+                    intent.setClassName("com.miui.securitycenter",
+                            "com.miui.permcenter.permissions.PermissionsEditorActivity");
+                    intent.putExtra("extra_pkgname", getActivity().getPackageName());
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Please Enable the additional permissions")
+                            .setMessage("You will not receive notifications while the app is in background if you disable these permissions")
+                            .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    startActivity(intent);
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .show();
+                }
+                else {
+                    Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                    startActivity(myIntent);
+                }
+            }
+        }
+    }
+
+    private void getNotRespondedOrders(){
+        Retrofit retrofit = RetrofitClient.getInstance();
+        NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
+
+        Call<List<OrderItem>> call = networkAPI.getNotRespondedOrders(LocalDB.getDeliverySathiDetails(getContext()).getPhoneNo());
+        call.enqueue(new Callback<List<OrderItem>>() {
+            @Override
+            public void onResponse(Call<List<OrderItem>> call, Response<List<OrderItem>> response) {
+                if(!response.isSuccessful()){
+                    NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
+                    Toasty.error(getContext(),errorResponse.getDesc(),Toasty.LENGTH_LONG)
+                            .show();
+                    return;
+                }
+
+                for(int i=0;i<response.body().size();i++){
+                    OrderItem curr = response.body().get(i);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("new_order_arrived",true);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("new_order_data",gson.toJson(curr));
+                    openAcceptOrderFragment(bundle);
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<OrderItem>> call, Throwable t) {
+                Toasty.error(getContext(),t.getMessage(),Toasty.LENGTH_LONG)
+                        .show();
+            }
+        });
+
+    }
+
+    private void openAcceptOrderFragment(Bundle bundle){
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.acceptOrderFragment,bundle);
     }
 
     private void getCashInHand(){
@@ -253,7 +332,6 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if(multiplePermissionsReport.areAllPermissionsGranted()){
-//                            displayLocationSettingsRequest(getContext());
                             Log.i(TAG, "onPermissionsChecked: ");
                         }
 
@@ -329,6 +407,16 @@ public class HomeFragment extends Fragment {
     private void stopService(){
         Log.i(TAG, "stopService: ");
         if(backgroundLocationUpdatesService != null) getActivity().stopService(backgroundLocationUpdatesService);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sharedPreferences = getActivity().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,Context.MODE_PRIVATE);
+
+        if(!sharedPreferences.contains("new_order_arrived") || !sharedPreferences.getBoolean("new_order_arrived",true)){
+            getNotRespondedOrders();
+        }
     }
 
     @Override
