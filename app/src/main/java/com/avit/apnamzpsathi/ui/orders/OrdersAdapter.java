@@ -179,7 +179,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             }
         });
 
-        if(curr.getOrderStatus() == 4){
+        holder.nextActionButton.setEnabled(true);
+        if(curr.getOrderStatus() <= 4){
             holder.nextActionButton.setText("Order Received From Shop");
         }
         else {
@@ -190,6 +191,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         holder.nextActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                holder.nextActionButton.setEnabled(false);
                 ordersActions.updateOrderStatus(curr.get_id(), curr.getOrderStatus()+1,currPosition);
             }
         });

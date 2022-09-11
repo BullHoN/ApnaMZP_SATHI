@@ -67,7 +67,7 @@ public class AcceptOrderFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME, Context.MODE_PRIVATE);
         gson = new Gson();
 
-        if(getArguments().getString("new_order_data") != null){
+        if(getArguments() != null && getArguments().getString("new_order_data") != null){
             orderItem = gson.fromJson(getArguments().getString("new_order_data"),OrderItem.class);
         }else {
             orderItem = gson.fromJson(sharedPreferences.getString("new_order_data","{}"),OrderItem.class);
