@@ -32,7 +32,7 @@ import es.dmoral.toasty.Toasty;
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdapterViewHolder>{
 
     public interface OrdersActions {
-        void updateOrderStatus(String orderId,Integer updatedStatus,int position);
+        void updateOrderStatus(String orderId,Integer updatedStatus,int position,MaterialButton button);
         void updateItemsOnTheWayTotalCost(String orderId, String totalCost);
         void cancelItemsOnTheWay(String orderId);
     }
@@ -151,6 +151,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         });
 
         if(curr.getItemsOnTheWay() != null && curr.getItemsOnTheWay().size() > 0){
+            holder.itemsOnTheWayToggleButton.setBackgroundColor(context.getResources().getColor(R.color.failure));
             holder.itemsOnTheWayRecyclerView.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
             OrderItemsOnTheWayAdapter orderingItemsAdapter = new OrderItemsOnTheWayAdapter(context,curr.getItemsOnTheWay());
             holder.itemsOnTheWayRecyclerView.setAdapter(orderingItemsAdapter);
@@ -192,7 +193,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             @Override
             public void onClick(View view) {
                 holder.nextActionButton.setEnabled(false);
-                ordersActions.updateOrderStatus(curr.get_id(), curr.getOrderStatus()+1,currPosition);
+                ordersActions.updateOrderStatus(curr.get_id(), curr.getOrderStatus()+1,currPosition,holder.nextActionButton);
             }
         });
 

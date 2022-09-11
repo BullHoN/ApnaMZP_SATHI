@@ -49,11 +49,6 @@
             android:name=".MainActivity"
             android:exported="true"></activity>
 
-        <receiver android:name=".services.LocationBroadCastReceiver">
-            <intent-filter>
-                <action android:name="com.google.android.gms.location.sample.locationupdatespendingintent.LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".receivers.RestartBackgroundService"
             android:enabled="true"

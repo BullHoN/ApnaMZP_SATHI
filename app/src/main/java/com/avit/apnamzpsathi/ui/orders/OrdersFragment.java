@@ -26,6 +26,7 @@ import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.utils.ErrorUtils;
 import com.avit.apnamzpsathi.utils.NotificationUtils;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
@@ -131,7 +132,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
     }
 
     @Override
-    public void updateOrderStatus(String orderId, Integer updatedStatus,int position) {
+    public void updateOrderStatus(String orderId, Integer updatedStatus, int position, MaterialButton button) {
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
@@ -149,6 +150,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
                     NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
                     Toasty.error(getContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
                             .show();
+                    button.setEnabled(true);
                     return;
                 }
 
@@ -164,6 +166,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrdersActi
                 Log.e(TAG, "onFailure: ", t);
                 Toasty.error(getContext(),"Some Error Occurred",Toasty.LENGTH_SHORT)
                         .show();
+                button.setEnabled(true);
             }
         });
     }

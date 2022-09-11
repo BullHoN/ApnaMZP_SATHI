@@ -191,13 +191,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
-                            android:orientation="horizontal" >
+                            android:orientation="vertical" >
 
                             <TextView
                                 android:fontFamily="@font/roboto_bold"
                                 android:textColor="@color/white"
                                 android:id="@+id/customer_address"
                                 android:text="Address: Vaibhav Bhardwaj"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <TextView
+                                android:padding="5dp"
+                                android:background="@color/white"
+                                android:fontFamily="@font/roboto_bold"
+                                android:textColor="@color/primaryColor"
+                                android:text="Show Route"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
 
@@ -338,7 +347,7 @@
                             android:id="@+id/shop_address_container"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
+                            android:orientation="vertical"
                             android:background="@color/primaryColor" >
 
                             <TextView
@@ -346,6 +355,15 @@
                                 android:textColor="@color/white"
                                 android:id="@+id/shop_address"
                                 android:text="Address: Vaibhav Bhardwaj"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <TextView
+                                android:padding="5dp"
+                                android:background="@color/white"
+                                android:fontFamily="@font/roboto_bold"
+                                android:textColor="@color/primaryColor"
+                                android:text="Show Route"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
 

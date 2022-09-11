@@ -89,10 +89,10 @@ public class LocationUpdatesService extends Service {
         deliverySathi.setLongitude(longitude);
 
         Log.i(TAG, "sendLocationUpdates: " + sf.contains("new_order_data"));
-        if(sf.contains("new_order_data")){
-            OrderItem orderItem = gson.fromJson(sf.getString("new_order_data","{}"),OrderItem.class);
-            deliverySathi.setOrderId(orderItem.get_id());
-        }
+//        if(sf.contains("new_order_data")){
+//            OrderItem orderItem = gson.fromJson(sf.getString("new_order_data","{}"),OrderItem.class);
+//            deliverySathi.setOrderId(orderItem.get_id());
+//        }
 
 
         Call<ResponseBody> call = networkAPI.sendLocationUpdates(deliverySathi,null);

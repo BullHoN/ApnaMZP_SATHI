@@ -69,8 +69,12 @@ public class AcceptOrderFragment extends Fragment {
 
         if(getArguments() != null && getArguments().getString("new_order_data") != null){
             orderItem = gson.fromJson(getArguments().getString("new_order_data"),OrderItem.class);
-        }else {
+        }else if(sharedPreferences.getString("new_order_data","{}") != null){
             orderItem = gson.fromJson(sharedPreferences.getString("new_order_data","{}"),OrderItem.class);
+        }else {
+            Toasty.error(getContext(),"Gzb hi baat hai ye to",Toasty.LENGTH_LONG)
+                    .show();
+            Navigation.findNavController(binding.getRoot()).popBackStack();
         }
 
 
