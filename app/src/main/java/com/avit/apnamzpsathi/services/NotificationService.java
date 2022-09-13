@@ -69,6 +69,8 @@ public class NotificationService extends FirebaseMessagingService {
     private void handleNotification(String title,String desc,String data){
 
         NotificationUtils.playSound(getApplicationContext());
+        NotificationUtils.startVibration(getApplicationContext());
+
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

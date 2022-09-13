@@ -143,6 +143,7 @@ public class AcceptOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 NotificationUtils.stopSound();
+                NotificationUtils.stopVibration();
                 acceptOrder();
             }
         });
@@ -151,6 +152,7 @@ public class AcceptOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 NotificationUtils.stopSound();
+                NotificationUtils.stopVibration();
                 rejectOrder("Delivery Sathi Rejected");
             }
         });

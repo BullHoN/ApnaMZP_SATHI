@@ -3,8 +3,10 @@ package com.avit.apnamzpsathi.utils;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Vibrator;
 
 import com.avit.apnamzpsathi.R;
 
@@ -13,6 +15,7 @@ import java.util.List;
 public class NotificationUtils {
 
     private static MediaPlayer mediaPlayer;
+    private static Vibrator vibrator;
 
     // method checks if the app is in background or not
     public static boolean isAppIsInBackground(Context context) {
@@ -55,6 +58,28 @@ public class NotificationUtils {
             mediaPlayer.release();
             mediaPlayer = null;
         }
+    }
+
+    public static void startVibration(Context context){
+        if(vibrator == null){
+            vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        }
+
+        long[] pattern = {500, 800};
+
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_ALARM) //key
+                .build();
+
+        vibrator.cancel();
+        vibrator.vibrate(pattern,1,audioAttributes);
+
+    }
+
+    public static void stopVibration(){
+        if(vibrator == null) return;
+        vibrator.cancel();
     }
 
 }
