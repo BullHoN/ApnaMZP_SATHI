@@ -415,7 +415,7 @@ public class HomeFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,Context.MODE_PRIVATE);
 
         if(!sharedPreferences.contains("new_order_arrived") || !sharedPreferences.getBoolean("new_order_arrived",true)){
-            getNotRespondedOrders();
+//            getNotRespondedOrders();
         }
     }
 
