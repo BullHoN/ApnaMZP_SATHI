@@ -45,6 +45,7 @@ public class LocationUpdatesService extends Service {
     private LocationCallback locationCallback;
     private DeliverySathi deliverySathi;
     private Gson gson;
+    private boolean isRemoved;
 
     public LocationUpdatesService() {
     }
@@ -72,6 +73,7 @@ public class LocationUpdatesService extends Service {
 
         startForeground(1, notification);
 
+        isRemoved = false;
         getLocationUpdates();
         return START_STICKY;
     }
@@ -130,6 +132,7 @@ public class LocationUpdatesService extends Service {
 
                 // SAVE THE Location
                 Log.i(TAG, "onLocationResult: " + location.toString());
+                if(isRemoved) return;
                 sendLocationUpdates(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
             }
         };
@@ -170,8 +173,8 @@ public class LocationUpdatesService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: ");
+        isRemoved = true;
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-        removeFromLive();
 
     }
 }

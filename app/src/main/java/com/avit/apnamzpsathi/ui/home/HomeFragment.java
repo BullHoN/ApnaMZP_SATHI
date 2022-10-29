@@ -406,7 +406,28 @@ public class HomeFragment extends Fragment {
 
     private void stopService(){
         Log.i(TAG, "stopService: ");
+        removeFromLive();
         if(backgroundLocationUpdatesService != null) getActivity().stopService(backgroundLocationUpdatesService);
+    }
+
+    private void removeFromLive(){
+        Retrofit retrofit = RetrofitClient.getInstance();
+        NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
+
+        Call<ResponseBody> call = networkAPI.sendLocationUpdates(LocalDB.getDeliverySathiDetails(getContext()),"del");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toasty.success(getContext(),"Closed Successfully",Toasty.LENGTH_LONG)
+                        .show();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
+
     }
 
     @Override
