@@ -377,6 +377,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/items_on_the_way_container"
                 android:layout_width="match_parent"
                 app:cardUseCompatPadding="true"
                 android:layout_height="wrap_content" >

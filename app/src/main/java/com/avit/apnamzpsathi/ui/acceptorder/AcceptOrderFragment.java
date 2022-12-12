@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -80,6 +82,14 @@ public class AcceptOrderFragment extends Fragment {
 
         binding.shopName.setText("Shop Name: " + orderItem.getShopInfo().getName());
         binding.shopPhoneNo.setText("Phone No: " + orderItem.getShopInfo().getPhoneNo());
+
+        if(orderItem.isAdminShopService() && orderItem.getSpecialInstructions() != null){
+            binding.specialInstructionContainer.setVisibility(View.VISIBLE);
+            binding.specialInstruction.setText(orderItem.getSpecialInstructions());
+        }
+        else{
+            binding.specialInstructionContainer.setVisibility(View.GONE);
+        }
 
         binding.shopPhoneNo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +172,26 @@ public class AcceptOrderFragment extends Fragment {
 
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(
+                false // default to enabled
+        ) {
+            @Override
+            public void handleOnBackPressed() {
+                Toasty.error(getContext(),"You Cannot go back",Toasty.LENGTH_LONG)
+                        .show();
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                this,
+                callback);
+
     }
 
     private void call(String phoneNo){

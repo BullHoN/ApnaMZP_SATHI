@@ -45,7 +45,7 @@ public class NotificationUtils {
 
     public static void playSound(Context context){
         if(mediaPlayer == null){
-            mediaPlayer = MediaPlayer.create(context, R.raw.new_order);
+            mediaPlayer = MediaPlayer.create(context, R.raw.new_order_2);
             mediaPlayer.setLooping(true);
         }
 

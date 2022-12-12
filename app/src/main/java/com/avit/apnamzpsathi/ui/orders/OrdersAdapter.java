@@ -107,6 +107,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             holder.customerLandmarkContainer.setVisibility(View.VISIBLE);
             holder.customerLandmark.setText("Landmark: " + curr.getUserInfo().getLandmark());
         }
+        else {
+            holder.customerLandmarkContainer.setVisibility(View.GONE);
+        }
 
         if(curr.getUserInfo().getHouseNo() != null && curr.getUserInfo().getHouseNo().length() != 0){
             holder.customerHouseContainer.setVisibility(View.VISIBLE);
@@ -169,6 +172,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
                     }
                 }
             });
+        }
+        else {
+            holder.itemsOnTheWayContainer.setVisibility(View.GONE);
         }
 
 
@@ -311,7 +317,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         public MaterialButton nextActionButton;
         public ImageButton moreActionsMenuButton;
         public TextView totalAmountToTakeView, totalAmountToGiveView, expectedIncome;
-        public LinearLayout customerAddressContainer, shopAddressContainer;
+        public LinearLayout customerAddressContainer, shopAddressContainer, itemsOnTheWayContainer;
 
         public OrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -347,6 +353,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             shopAddressContainer = itemView.findViewById(R.id.shop_address_container);
 
             expectedIncome = itemView.findViewById(R.id.expectedIncome);
+            itemsOnTheWayContainer = itemView.findViewById(R.id.items_on_the_way_container);
 
         }
     }
