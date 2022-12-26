@@ -16,6 +16,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -199,7 +200,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
             @Override
             public void onClick(View view) {
                 holder.nextActionButton.setEnabled(false);
-                ordersActions.updateOrderStatus(curr.get_id(), curr.getOrderStatus()+1,currPosition,holder.nextActionButton);
+                int newStatus = curr.getOrderStatus() <= 4 ? 5 : 6;
+                ordersActions.updateOrderStatus(curr.get_id(), newStatus,currPosition,holder.nextActionButton);
             }
         });
 
@@ -317,7 +319,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersAdap
         public MaterialButton nextActionButton;
         public ImageButton moreActionsMenuButton;
         public TextView totalAmountToTakeView, totalAmountToGiveView, expectedIncome;
-        public LinearLayout customerAddressContainer, shopAddressContainer, itemsOnTheWayContainer;
+        public LinearLayout customerAddressContainer, shopAddressContainer;
+        public CardView itemsOnTheWayContainer;
 
         public OrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

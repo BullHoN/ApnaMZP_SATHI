@@ -20,6 +20,9 @@
         android:theme="@style/Theme.ApnaMzpSathi"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.acceptorder.AcceptOrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".LocationServiceToogleActivity"
             android:exported="false" />
         <activity
@@ -48,7 +51,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
 
         <receiver
             android:name=".receivers.RestartBackgroundService"

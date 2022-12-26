@@ -19,6 +19,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.avit.apnamzpsathi.MainActivity;
 import com.avit.apnamzpsathi.R;
 import com.avit.apnamzpsathi.db.SharedPrefNames;
+import com.avit.apnamzpsathi.ui.acceptorder.AcceptOrderActivity;
 import com.avit.apnamzpsathi.utils.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -71,7 +72,7 @@ public class NotificationService extends FirebaseMessagingService {
         NotificationUtils.playSound(getApplicationContext());
         NotificationUtils.startVibration(getApplicationContext());
 
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), AcceptOrderActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

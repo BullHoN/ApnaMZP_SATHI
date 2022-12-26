@@ -9,9 +9,11 @@ import androidx.navigation.Navigation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -65,6 +67,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private String TAG = "LocationUpdatesService";
@@ -102,14 +105,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        if(getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals("com.avit.apnamzp_sathi.NEW_ORDER_NOTIFICATION")){
-            openAcceptOrderFragment(null);
+//        if(getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals("com.avit.apnamzp_sathi.NEW_ORDER_NOTIFICATION")){
+//            openAcceptOrderFragment(null);
 //            SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,MODE_PRIVATE);
 //            SharedPreferences.Editor editor = sf.edit();
 //
 //            editor.putBoolean("new_order_arrived",false);
 //            editor.apply();
-        }
+//        }
         // Broadcast receiver
 
 //        intentFilter = new IntentFilter();
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openAcceptOrderFragment(Bundle bundle){
-        navController.navigate(R.id.acceptOrderFragment,bundle);
+//        navController.navigate(R.id.acceptOrderFragment,bundle);
     }
 
     private void sendFcmIdToServer(DeliverySathi deliverySathi){
@@ -191,4 +194,34 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
 //        unregisterReceiver(receiver);
     }
+
+    private void askForBack(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Do You Want To Exit ?");
+        builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                MainActivity.super.onBackPressed();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        askForBack();
+    }
+
+
+
 }

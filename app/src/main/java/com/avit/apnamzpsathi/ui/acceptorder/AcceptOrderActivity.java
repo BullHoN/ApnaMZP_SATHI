@@ -1,35 +1,28 @@
 package com.avit.apnamzpsathi.ui.acceptorder;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.airbnb.lottie.L;
 import com.avit.apnamzpsathi.R;
-import com.avit.apnamzpsathi.databinding.FragmentAcceptOrderBinding;
+import com.avit.apnamzpsathi.databinding.ActivityAcceptOrderBinding;
 import com.avit.apnamzpsathi.db.LocalDB;
 import com.avit.apnamzpsathi.db.SharedPrefNames;
 import com.avit.apnamzpsathi.model.NetworkResponse;
 import com.avit.apnamzpsathi.model.OrderItem;
-import com.avit.apnamzpsathi.model.UserInfo;
 import com.avit.apnamzpsathi.network.NetworkAPI;
 import com.avit.apnamzpsathi.network.RetrofitClient;
 import com.avit.apnamzpsathi.ui.orders.OrderingItemsAdapter;
@@ -44,10 +37,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-// TODO: NON FUNCTIONAL FRAGMENT
-public class AcceptOrderFragment extends Fragment {
+public class AcceptOrderActivity extends AppCompatActivity {
 
-    private FragmentAcceptOrderBinding binding;
+    private ActivityAcceptOrderBinding binding;
     private OrderItem orderItem;
     private SharedPreferences sharedPreferences;
     private Gson gson;
@@ -61,21 +53,18 @@ public class AcceptOrderFragment extends Fragment {
     private String TAG = "OrderNotifications";
     private CountDownTimer cancelOrderTimer;
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentAcceptOrderBinding.inflate(inflater,container,false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityAcceptOrderBinding.inflate(getLayoutInflater());
 
-        sharedPreferences = getActivity().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME, Context.MODE_PRIVATE);
         gson = new Gson();
 
-        if(getArguments() != null && getArguments().getString("new_order_data") != null){
-            orderItem = gson.fromJson(getArguments().getString("new_order_data"),OrderItem.class);
-        }else if(sharedPreferences.getString("new_order_data","{}") != null){
+        if(sharedPreferences.getString("new_order_data","{}") != null){
             orderItem = gson.fromJson(sharedPreferences.getString("new_order_data","{}"),OrderItem.class);
         }else {
-            Toasty.error(getContext(),"Gzb hi baat hai ye to",Toasty.LENGTH_LONG)
+            Toasty.error(getApplicationContext(),"Gzb hi baat hai ye to",Toasty.LENGTH_LONG)
                     .show();
             Navigation.findNavController(binding.getRoot()).popBackStack();
         }
@@ -123,9 +112,9 @@ public class AcceptOrderFragment extends Fragment {
             binding.alertAnimation.playAnimation();
 
             binding.orderItemsContainer.setVisibility(View.VISIBLE);
-            binding.orderItems.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+            binding.orderItems.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
 
-            OrderingItemsAdapter orderingItemsAdapter = new OrderingItemsAdapter(orderItem.getOrderItems(),getContext());
+            OrderingItemsAdapter orderingItemsAdapter = new OrderingItemsAdapter(orderItem.getOrderItems(),this);
             binding.orderItems.setAdapter(orderingItemsAdapter);
 
         }
@@ -170,9 +159,7 @@ public class AcceptOrderFragment extends Fragment {
 
         removeNewSathi();
 
-
-
-        return binding.getRoot();
+        setContentView(binding.getRoot());
     }
 
     private void call(String phoneNo){
@@ -192,7 +179,7 @@ public class AcceptOrderFragment extends Fragment {
     }
 
     private void removeNewSathi(){
-        SharedPreferences sf = getActivity().getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,Context.MODE_PRIVATE);
+        SharedPreferences sf = getSharedPreferences(SharedPrefNames.SHARED_DB_NAME,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sf.edit();
 
         editor.putBoolean("new_order_arrived",false);
@@ -213,7 +200,7 @@ public class AcceptOrderFragment extends Fragment {
             public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
                 if(!response.isSuccessful())       {
                     NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
-                    Toasty.error(getContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                    Toasty.error(getApplicationContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
                             .show();
                     return;
                 }
@@ -221,7 +208,7 @@ public class AcceptOrderFragment extends Fragment {
                 NetworkResponse successResponse = response.body();
                 openOrdersFragment();
                 if(successResponse.isSuccess()){
-                    Toasty.success(getContext(),"Order Accepted",Toasty.LENGTH_SHORT)
+                    Toasty.success(getApplicationContext(),"Order Accepted",Toasty.LENGTH_SHORT)
                             .show();
                 }
 
@@ -234,8 +221,8 @@ public class AcceptOrderFragment extends Fragment {
         });
     }
 
-    private void openOrdersFragment(){
-        Navigation.findNavController(binding.getRoot()).popBackStack();
+    private void openOrdersFragment() {
+        finish();
     }
 
     private void rejectOrder(String reason) {
@@ -245,13 +232,13 @@ public class AcceptOrderFragment extends Fragment {
         Retrofit retrofit = RetrofitClient.getInstance();
         NetworkAPI networkAPI = retrofit.create(NetworkAPI.class);
 
-        Call<NetworkResponse> call = networkAPI.rejectOrder(orderItem.get_id(),LocalDB.getDeliverySathiDetails(getContext()).getPhoneNo(),reason);
+        Call<NetworkResponse> call = networkAPI.rejectOrder(orderItem.get_id(), LocalDB.getDeliverySathiDetails(getApplicationContext()).getPhoneNo(),reason);
         call.enqueue(new Callback<NetworkResponse>() {
             @Override
             public void onResponse(Call<NetworkResponse> call, Response<NetworkResponse> response) {
                 if(!response.isSuccessful()){
                     NetworkResponse errorResponse = ErrorUtils.parseErrorResponse(response);
-                    Toasty.error(getContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
+                    Toasty.error(getApplicationContext(),errorResponse.getDesc(),Toasty.LENGTH_SHORT)
                             .show();
                     return;
                 }
@@ -259,7 +246,7 @@ public class AcceptOrderFragment extends Fragment {
                 NetworkResponse successResponse = response.body();
                 openOrdersFragment();
                 if(successResponse.isSuccess()){
-                    Toasty.success(getContext(),"Order Accepted",Toasty.LENGTH_SHORT)
+                    Toasty.success(getApplicationContext(),"Order Accepted",Toasty.LENGTH_SHORT)
                             .show();
                 }
 
@@ -273,6 +260,8 @@ public class AcceptOrderFragment extends Fragment {
 
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+    }
 }
